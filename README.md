@@ -4,9 +4,9 @@
 
 React Native Header is a high-performance, cross-platform animated header component for React Native applications. It provides an easy-to-use interface for developers to quickly create beautiful and dynamic navigation headers.
 
-| Android/iOS/Web |
-| ------------- |
-| <img src="https://github.com/codeherence/react-native-header/assets/128341688/b465a0f5-ce06-46a7-9894-849db698b66b" alt="iOS React Native Header Showcase" width="100%"> |
+| Android/iOS/Web                                                                                                                                                         |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img src="https://github.com/codeherence/react-native-graph/assets/128341688/b465a0f5-ce06-46a7-9894-849db698b66b" alt="iOS React Native Header Showcase" width="100%"> |
 
 ## Features
 
@@ -19,7 +19,7 @@ React Native Header is a high-performance, cross-platform animated header compon
 
 ## Documentation
 
-The documentation for this library can be found at [here](https://react-native-header.codeherence.com).
+The documentation for this library can be found at [here](https://react-native-graph.codeherence.com).
 
 ## Contributing
 

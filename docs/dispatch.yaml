@@ -1,3 +1,0 @@
-dispatch:
-  - url: "react-native-header.codeherence.com/*"
-    service: default

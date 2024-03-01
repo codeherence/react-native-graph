@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@codeherence/react-native-header": ["./src/index"]
+      "@codeherence/react-native-graph": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

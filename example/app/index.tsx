@@ -1,4 +1,4 @@
-import { SkiaComponent } from '@codeherence/react-native-header';
+import { SkiaComponent } from "@codeherence/react-native-graph";
 
 export default function Page() {
   return <SkiaComponent />;

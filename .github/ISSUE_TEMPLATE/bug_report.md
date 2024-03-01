@@ -1,10 +1,9 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: 'bug: <brief description>'
+title: "bug: <brief description>"
 labels: bug
-assignees: ''
-
+assignees: ""
 ---
 
 ## Description
@@ -31,13 +30,13 @@ Please describe what actually happened.
 
 <!-- Remove any rows that have (if applicable) if they are not used. -->
 
-|||
-| --------------------------------- | ---------------------------------- |
-| react-native-header | v0.6.0 |
-| Platform & OS (if applicable) | iOS/Android/Web |
-| Device (if applicable) | iPhone 13 Pro Max |
-| react-native-reanimated | v2.0.0 |
-| react-native-safe-area-context | v4.5.0   
+|                                |                   |
+| ------------------------------ | ----------------- |
+| react-native-graph             | v0.6.0            |
+| Platform & OS (if applicable)  | iOS/Android/Web   |
+| Device (if applicable)         | iPhone 13 Pro Max |
+| react-native-reanimated        | v2.0.0            |
+| react-native-safe-area-context | v4.5.0            |
 
 ## Additional Information
 

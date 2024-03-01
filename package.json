@@ -1,5 +1,5 @@
 {
-  "name": "@codeherence/react-native-header",
+  "name": "@codeherence/react-native-graph",
   "version": "0.11.2",
   "description": "A high-performance, cross-platform animated header component for React Native applications",
   "main": "lib/commonjs/index",
@@ -41,13 +41,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/codeherence/react-native-header",
+  "repository": "https://github.com/codeherence/react-native-graph",
   "author": "codeherence <contact@codeherence.com> (https://www.codeherence.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/codeherence/react-native-header/issues"
+    "url": "https://github.com/codeherence/react-native-graph/issues"
   },
-  "homepage": "https://github.com/codeherence/react-native-header#readme",
+  "homepage": "https://github.com/codeherence/react-native-graph#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

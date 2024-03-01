@@ -10,7 +10,7 @@ config.resolver.extraNodeModules = new Proxy(
   {
     get: (target, name) => {
       // Redirects dependencies by name
-      if (name === "@codeherence/react-native-header") {
+      if (name === "@codeherence/react-native-graph") {
         return path.join(__dirname, "..", "src");
       }
       return path.join(process.cwd(), "node_modules", name);
