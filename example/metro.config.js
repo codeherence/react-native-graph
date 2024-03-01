@@ -24,6 +24,8 @@ config.resolver.extraNodeModules = new Proxy(
 config.resolver.blockList = [
   ...Array.from(config.resolver.blockList ?? []),
   new RegExp(path.resolve("..", "node_modules", "react-native")),
+  new RegExp(path.resolve("..", "node_modules", "@shopify/react-native-skia")),
+  new RegExp(path.resolve("..", "node_modules", "react-native-reanimated")),
 ];
 
 config.resolver.nodeModulesPaths = [

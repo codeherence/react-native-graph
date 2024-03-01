@@ -1,1 +1,2 @@
-export { default as SkiaComponent } from './components/SkiaLoader';
+export { LineChart } from "./components/SkiaComponents";
+export { type BannerComponentProps } from "./components/LineChart/Banner";
