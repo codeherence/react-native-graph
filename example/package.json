@@ -1,0 +1,42 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start --dev-client",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "postinstall": "yarn setup-skia-web && node path-fs-canvaskit-postinstall.js"
+  },
+  "dependencies": {
+    "@expo/metro-runtime": "~3.1.3",
+    "@shopify/react-native-skia": "^0.1.241",
+    "expo": "~50.0.8",
+    "expo-blur": "~12.9.2",
+    "expo-constants": "~15.4.5",
+    "expo-crypto": "~12.8.1",
+    "expo-dev-client": "~3.3.9",
+    "expo-image": "~1.10.6",
+    "expo-linking": "~6.2.2",
+    "expo-router": "~3.4.8",
+    "expo-splash-screen": "~0.26.4",
+    "expo-status-bar": "~1.11.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.73.4",
+    "react-native-reanimated": "^3.7.2",
+    "react-native-safe-area-context": "4.8.2",
+    "react-native-screens": "~3.29.0",
+    "react-native-web": "~0.19.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
+    "@expo/webpack-config": "~19.0.1",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "react-native-svg-transformer": "^1.0.0"
+  },
+  "private": true
+}
