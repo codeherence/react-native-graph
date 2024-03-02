@@ -1,10 +1,10 @@
-import { Circle, Group, Line, vec } from '@shopify/react-native-skia';
-import type { AnimatedProp, SkPath } from '@shopify/react-native-skia';
-import { useDerivedValue } from 'react-native-reanimated';
-import type { SharedValue } from 'react-native-reanimated';
+import { Circle, Group, Line, vec } from "@shopify/react-native-skia";
+import type { AnimatedProp, SkPath } from "@shopify/react-native-skia";
+import { useDerivedValue } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
 
-import type { BannerComponentProps } from './Banner';
-import { getYForX } from './Math';
+import type { BannerComponentProps } from "./Banner";
+import { getYForX } from "./Math";
 
 interface CursorProps {
   height: number;
@@ -14,6 +14,8 @@ interface CursorProps {
   BannerComponent: React.FC<BannerComponentProps> | null;
 }
 
+const BASE_LABEL_MARGIN = 8;
+
 export const Cursor: React.FC<CursorProps> = ({
   cursorRadius,
   path,
@@ -21,10 +23,7 @@ export const Cursor: React.FC<CursorProps> = ({
   height,
   BannerComponent,
 }) => {
-  const y = useDerivedValue(
-    () => (path ? getYForX(path, x.value, 2) ?? 0 : 0),
-    [path]
-  );
+  const y = useDerivedValue(() => (path ? getYForX(path, x.value, 2) ?? 0 : 0), [path]);
 
   const lineTransform = useDerivedValue(() => {
     return [{ translateX: x.value }];
@@ -38,17 +37,25 @@ export const Cursor: React.FC<CursorProps> = ({
     return `$${y.value.toFixed(2)}`;
   });
 
+  const bannerTransform = useDerivedValue(() => {
+    return [{ translateX: cursorRadius }, { translateY: -cursorRadius - BASE_LABEL_MARGIN }];
+  });
+
   return (
     <>
       <Line
         transform={lineTransform}
         p1={vec(0, 0)}
         p2={vec(0, height)}
-        color="black"
+        color="rgba(0, 0, 0, 0.5)"
         strokeWidth={2}
       />
       <Group transform={transform}>
-        {BannerComponent && BannerComponent({ text: animatedText })}
+        {BannerComponent && (
+          <Group transform={bannerTransform} style="fill" color="red">
+            {BannerComponent({ text: animatedText })}
+          </Group>
+        )}
         <Circle cx={0} cy={0} r={cursorRadius} color="black" />
       </Group>
     </>

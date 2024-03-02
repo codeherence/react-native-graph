@@ -1,5 +1,5 @@
-import { useTouchHandler } from '@shopify/react-native-skia';
-import type { SharedValueType } from '@shopify/react-native-skia';
+import { useTouchHandler } from "@shopify/react-native-skia";
+import type { SharedValueType } from "@shopify/react-native-skia";
 
 interface UseGestureHandlerProps {
   x: SharedValueType;
@@ -7,11 +7,7 @@ interface UseGestureHandlerProps {
   width: number;
 }
 
-export const useGestureHandler = ({
-  x,
-  width,
-  cursorRadius,
-}: UseGestureHandlerProps) => {
+export const useGestureHandler = ({ x, width, cursorRadius }: UseGestureHandlerProps) => {
   return useTouchHandler(
     {
       onStart: (ti) => {

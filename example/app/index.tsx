@@ -1,11 +1,9 @@
+import { LineChart } from "@codeherence/react-native-graph";
 import { useMemo } from "react";
 import { View, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { LineChart } from "@codeherence/react-native-graph";
 import { Banner } from "../components/Banner";
-
-const GRAPH_HEIGHT_PROPORTION = 0.5;
 
 export default () => {
   const { top, bottom } = useSafeAreaInsets();
@@ -20,7 +18,6 @@ export default () => {
       style={{
         paddingTop: top,
         paddingBottom: bottom,
-        position: "relative",
         justifyContent: "center",
         alignItems: "center",
       }}
@@ -28,7 +25,7 @@ export default () => {
       <LineChart
         points={data}
         width={width}
-        height={height * GRAPH_HEIGHT_PROPORTION}
+        height={height - (top + bottom)}
         BannerComponent={Banner}
       />
     </View>

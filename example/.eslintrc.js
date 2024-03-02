@@ -1,29 +1,22 @@
 module.exports = {
   root: true,
-  extends: ['@react-native-community', 'prettier'],
+  extends: ["universe", "universe/native", "universe/web", "prettier"],
+  env: {
+    node: true,
+  },
   overrides: [
     {
-      files: ['*.ts', '*.tsx', '*.d.ts'],
+      files: ["*.ts", "*.tsx", "*.d.ts"],
       parserOptions: {
-        project: './tsconfig.json',
+        project: "./tsconfig.json",
         tsconfigRootDir: __dirname,
-        sourceType: 'module',
+        sourceType: "module",
       },
     },
   ],
   rules: {
-    'prettier/prettier': [
-      'error',
-      {
-        quoteProps: 'consistent',
-        singleQuote: true,
-        tabWidth: 2,
-        trailingComma: 'es5',
-        useTabs: false,
-        printWidth: 100,
-      },
-    ],
-    'react/jsx-uses-react': 'off',
-    'react/react-in-jsx-scope': 'off',
+    "prettier/prettier": ["error", {}, { usePrettierrc: true }],
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
   },
 };

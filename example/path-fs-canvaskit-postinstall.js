@@ -1,8 +1,8 @@
 // To be added in package.json "postinstall": "(...) && node path-fs-canvaskit-postinstall.js"
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const packageJsonPath = path.join(__dirname, 'node_modules', 'canvaskit-wasm', 'package.json');
+const packageJsonPath = path.join(__dirname, "node_modules", "canvaskit-wasm", "package.json");
 const packageJson = require(packageJsonPath);
 
 packageJson.browser = {

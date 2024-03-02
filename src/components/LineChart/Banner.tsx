@@ -1,4 +1,4 @@
-import type { AnimatedProp } from '@shopify/react-native-skia';
+import type { AnimatedProp } from "@shopify/react-native-skia";
 
 export interface BannerComponentProps {
   text: AnimatedProp<string>;

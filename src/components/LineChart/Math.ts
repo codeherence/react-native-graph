@@ -1,15 +1,11 @@
-import type { Vector, PathCommand, SkPath } from '@shopify/react-native-skia';
-import {
-  PathVerb,
-  Skia,
-  cartesian2Polar,
-  vec,
-} from '@shopify/react-native-skia';
+import type { Vector, PathCommand, SkPath } from "@shopify/react-native-skia";
+import { PathVerb, vec } from "@shopify/react-native-skia";
 
+// Source:
 // code from William Candillon
 
 const round = (value: number, precision = 0): number => {
-  'worklet';
+  "worklet";
 
   const p = Math.pow(10, precision);
   return Math.round(value * p) / p;
@@ -17,14 +13,14 @@ const round = (value: number, precision = 0): number => {
 
 // https://stackoverflow.com/questions/27176423/function-to-solve-cubic-equation-analytically
 const cuberoot = (x: number): number => {
-  'worklet';
+  "worklet";
 
   const y = Math.pow(Math.abs(x), 1 / 3);
   return x < 0 ? -y : y;
 };
 
 const solveCubic = (a: number, b: number, c: number, d: number): number[] => {
-  'worklet';
+  "worklet";
 
   if (Math.abs(a) < 1e-8) {
     // Quadratic case, ax^2+bx+c=0
@@ -44,8 +40,7 @@ const solveCubic = (a: number, b: number, c: number, d: number): number[] => {
 
     const D = b * b - 4 * a * c;
     if (Math.abs(D) < 1e-8) return [-b / (2 * a)];
-    if (D > 0)
-      return [(-b + Math.sqrt(D)) / (2 * a), (-b - Math.sqrt(D)) / (2 * a)];
+    if (D > 0) return [(-b + Math.sqrt(D)) / (2 * a), (-b - Math.sqrt(D)) / (2 * a)];
 
     return [];
   }
@@ -85,14 +80,8 @@ const solveCubic = (a: number, b: number, c: number, d: number): number[] => {
   return roots;
 };
 
-const cubicBezier = (
-  t: number,
-  from: number,
-  c1: number,
-  c2: number,
-  to: number
-): number => {
-  'worklet';
+const cubicBezier = (t: number, from: number, c1: number, c2: number, to: number): number => {
+  "worklet";
 
   const term = 1 - t;
   const a = 1 * term ** 3 * t ** 0 * from;
@@ -110,7 +99,7 @@ export const cubicBezierYForX = (
   d: Vector,
   precision = 2
 ): number => {
-  'worklet';
+  "worklet";
 
   const pa = -a.x + 3 * b.x - 3 * c.x + d.x;
   const pb = 3 * a.x - 6 * b.x + 3 * c.x;
@@ -131,11 +120,8 @@ interface Cubic {
   to: Vector;
 }
 
-export const selectCurve = (
-  cmds: PathCommand[],
-  x: number
-): Cubic | undefined => {
-  'worklet';
+export const selectCurve = (cmds: PathCommand[], x: number): Cubic | undefined => {
+  "worklet";
 
   let from: Vector = vec(0, 0);
   for (let i = 0; i < cmds.length; i++) {
@@ -161,91 +147,11 @@ export const selectCurve = (
   return undefined;
 };
 
-export const getYForX = (
-  path: SkPath,
-  x: number,
-  precision = 2
-): number | undefined => {
-  'worklet';
+export const getYForX = (path: SkPath, x: number, precision = 2): number | undefined => {
+  "worklet";
 
   const c = selectCurve(path.toCmds(), x);
   if (c == null) return undefined;
 
   return cubicBezierYForX(x, c.from, c.c1, c.c2, c.to, precision);
-};
-
-export const controlPoint = (
-  current: Vector,
-  previous: Vector,
-  next: Vector,
-  reverse: boolean,
-  smoothing: number
-) => {
-  'worklet';
-  const p = previous || current;
-  const n = next || current;
-  // Properties of the opposed-line
-  const lengthX = n.x - p.x;
-  const lengthY = n.y - p.y;
-
-  const o = cartesian2Polar({ x: lengthX, y: lengthY });
-  // If is end-control-point, add PI to the angle to go backward
-  const angle = o.theta + (reverse ? Math.PI : 0);
-  const length = o.radius * smoothing;
-  // The control point position is relative to the current point
-  const x = current.x + Math.cos(angle) * length;
-  const y = current.y + Math.sin(angle) * length;
-  return { x, y };
-};
-
-interface CurveLineArgs {
-  points: Vector[];
-}
-
-export const curveLinesBezier = ({ points }: CurveLineArgs) => {
-  'worklet';
-
-  const path = Skia.Path.Make();
-  // Start from the first point
-  path.moveTo(points[0].x, points[0].y);
-
-  // build the d attributes by looping over the points
-  for (let i = 1; i < points.length; i++) {
-    const prev = points[i - 1];
-    const curr = points[i];
-    // const next = points[i + 1];
-
-    // const cps = controlPoint(prev, points[i - 2], curr, false, smoothing);
-    // const cpe = controlPoint(curr, prev, next, true, smoothing);
-
-    // Calculate smoothed control points
-    const p0 = points[i - 2] || prev;
-    const p1 = points[i - 1];
-    const cp1x = (2 * p0.x + p1.x) / 3;
-    const cp1y = (2 * p0.y + p1.y) / 3;
-    const cp2x = (p0.x + 2 * p1.x) / 3;
-    const cp2y = (p0.y + 2 * p1.y) / 3;
-    const cp3x = (p0.x + 4 * p1.x + curr.x) / 6;
-    const cp3y = (p0.y + 4 * p1.y + curr.y) / 6;
-    path.cubicTo(cp1x, cp1y, cp2x, cp2y, cp3x, cp3y);
-
-    if (i === points.length - 1) {
-      path.cubicTo(
-        points[points.length - 1].x,
-        points[points.length - 1].y,
-        points[points.length - 1].x,
-        points[points.length - 1].y,
-        points[points.length - 1].x,
-        points[points.length - 1].y
-      );
-    }
-  }
-
-  // Draw the last line directly to the last point
-  if (points.length > 2) {
-    const last = points.length - 1;
-    path.lineTo(points[last].x, points[last].y);
-  }
-
-  return path;
 };

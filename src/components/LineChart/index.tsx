@@ -1,12 +1,12 @@
-import { Canvas, Path } from '@shopify/react-native-skia';
-import type { SkFont, Vector } from '@shopify/react-native-skia';
-import { useMemo } from 'react';
-import { interpolate, useSharedValue } from 'react-native-reanimated';
+import { Canvas, Path, Skia } from "@shopify/react-native-skia";
+import { scaleSqrt, scaleTime } from "d3";
+import { curveBasis, line } from "d3-shape";
+import { useMemo } from "react";
+import { useSharedValue } from "react-native-reanimated";
 
-import type { BannerComponentProps } from './Banner';
-import { Cursor } from './Cursor';
-import { curveLinesBezier } from './Math';
-import { useGestureHandler } from './useGestureHandler';
+import type { BannerComponentProps } from "./Banner";
+import { Cursor } from "./Cursor";
+import { useGestureHandler } from "./useGestureHandler";
 
 export type LineChartProps = {
   width: number;
@@ -17,15 +17,6 @@ export type LineChartProps = {
   strokeWidth?: number;
   BannerComponent?: React.FC<BannerComponentProps>;
 };
-
-// const COLORS = [
-//   "#FF0000",
-//   "#00FF00",
-//   "#0000FF",
-//   "#FFFF00",
-//   "#00FFFF",
-//   "#FF00FF",
-// ];
 
 export const LineChart: React.FC<LineChartProps> = ({
   width,
@@ -64,40 +55,25 @@ export const LineChart: React.FC<LineChartProps> = ({
     // If the dates array is empty, return a Path as a horizontal straight line
     // in the center of the chart
     if (dates.length === 0) {
-      return null;
+      return Skia.Path.Make()
+        .moveTo(0, height / 2)
+        .lineTo(width, height / 2);
     }
 
-    const { points, minTimestamp, maxTimestamp, minValue, maxValue } =
-      computedData;
+    const { points, minTimestamp, maxTimestamp, minValue, maxValue } = computedData;
+    const scaleX = scaleTime().domain([minTimestamp, maxTimestamp]).range([0, width]);
+    const scaleY = scaleSqrt().domain([minValue, maxValue]).range([height, 0]);
+    const rawPath = line()
+      .x(([x]) => scaleX(x) as number)
+      .y(([, y]) => scaleY(y) as number)
+      .curve(curveBasis)(points) as string;
 
-    const skPoints: Vector[] = points.map(([x, y]) => ({
-      x: interpolate(x, [minTimestamp, maxTimestamp], [0, width]),
-      y: interpolate(
-        y,
-        [minValue, maxValue],
-        [height - cursorRadius, cursorRadius]
-      ),
-    }));
-
-    return curveLinesBezier({ points: skPoints });
+    return Skia.Path.MakeFromSVGString(rawPath);
   }, [computedData, width]);
 
   return (
     <Canvas style={{ width, height }} onTouch={onTouch}>
-      {path && (
-        <Path
-          style="stroke"
-          path={path}
-          strokeWidth={strokeWidth}
-          color="black"
-        >
-          {/* <LinearGradient
-            start={vec(0, 0)}
-            end={vec(width, 0)}
-            colors={COLORS}
-          /> */}
-        </Path>
-      )}
+      {path && <Path style="stroke" path={path} strokeWidth={strokeWidth} color="black" />}
 
       <Cursor
         x={x}
