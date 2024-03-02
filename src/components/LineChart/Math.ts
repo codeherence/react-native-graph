@@ -1,5 +1,7 @@
 import type { Vector, PathCommand, SkPath } from "@shopify/react-native-skia";
-import { PathVerb, vec } from "@shopify/react-native-skia";
+import { PathVerb, Skia, vec } from "@shopify/react-native-skia";
+import { scaleSqrt, scaleTime } from "d3";
+import { curveBasis, line } from "d3-shape";
 
 // Source:
 // code from William Candillon
@@ -154,4 +156,42 @@ export const getYForX = (path: SkPath, x: number, precision = 2): number | undef
   if (c == null) return undefined;
 
   return cubicBezierYForX(x, c.from, c.c1, c.c2, c.to, precision);
+};
+
+interface ComputePathProps {
+  width: number;
+  height: number;
+  points: [number, number][];
+  minValue: number;
+  maxValue: number;
+  minTimestamp: number;
+  maxTimestamp: number;
+}
+
+export const computePath = ({
+  width,
+  height,
+  points,
+  minTimestamp,
+  maxTimestamp,
+  minValue,
+  maxValue,
+}: ComputePathProps): SkPath => {
+  const straightLine = Skia.Path.Make()
+    .moveTo(0, height / 2)
+    .lineTo(width, height / 2);
+
+  // If the dates array is empty, return a Path as a horizontal straight line
+  // in the center of the chart
+  if (points.length === 0) return straightLine;
+
+  const scaleX = scaleTime().domain([minTimestamp, maxTimestamp]).range([0, width]);
+  const scaleY = scaleSqrt().domain([minValue, maxValue]).range([height, 0]);
+  const rawPath = line()
+    .x(([x]) => scaleX(x))
+    .y(([, y]) => scaleY(y))
+    .curve(curveBasis)(points);
+
+  if (rawPath === null) return straightLine;
+  return Skia.Path.MakeFromSVGString(rawPath) ?? straightLine;
 };

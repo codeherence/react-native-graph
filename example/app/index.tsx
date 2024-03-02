@@ -10,7 +10,7 @@ export default () => {
   const { width, height } = useWindowDimensions();
 
   const data: [number, number][] = useMemo(() => {
-    return Array.from({ length: 20 }, (_, i) => [i, Math.random() * 200]);
+    return Array.from({ length: 100 }, (_, i) => [i, Math.random() * 200]);
   }, []);
 
   return (
