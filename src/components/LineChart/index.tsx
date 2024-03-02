@@ -4,7 +4,7 @@ import { useSharedValue } from "react-native-reanimated";
 
 import type { BannerComponentProps } from "./Banner";
 import { Cursor } from "./Cursor";
-import { computePath } from "./Math";
+import { computePath, type ComputePathProps } from "./Math";
 import { useGestureHandler } from "./useGestureHandler";
 
 export type LineChartProps = {
@@ -14,6 +14,7 @@ export type LineChartProps = {
   points: [number, number][];
   cursorRadius?: number;
   strokeWidth?: number;
+  curveType?: ComputePathProps["curveType"];
   BannerComponent?: React.FC<BannerComponentProps>;
 };
 
@@ -23,9 +24,11 @@ export const LineChart: React.FC<LineChartProps> = ({
   strokeWidth = 2,
   cursorRadius = 8,
   points: _points,
+  curveType = "linear",
   BannerComponent = null,
 }) => {
-  const x = useSharedValue(0);
+  // Initially width + cursorRadius so that the cursor is offscreen
+  const x = useSharedValue(width + cursorRadius);
   const onTouch = useGestureHandler({ x, width, cursorRadius });
 
   // We separate the computation of the data from the rendering. This is so that these values are
@@ -42,7 +45,7 @@ export const LineChart: React.FC<LineChartProps> = ({
   }, [_points]);
 
   const path = useMemo(() => {
-    return computePath({ ...computedData, width, height });
+    return computePath({ ...computedData, width, height, cursorRadius, curveType });
   }, [computedData, width, height]);
 
   return (
@@ -51,6 +54,7 @@ export const LineChart: React.FC<LineChartProps> = ({
       <Cursor
         x={x}
         path={path}
+        curveType={curveType}
         height={height}
         cursorRadius={cursorRadius}
         BannerComponent={BannerComponent}

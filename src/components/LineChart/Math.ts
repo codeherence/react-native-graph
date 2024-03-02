@@ -1,7 +1,7 @@
 import type { Vector, PathCommand, SkPath } from "@shopify/react-native-skia";
 import { PathVerb, Skia, vec } from "@shopify/react-native-skia";
 import { scaleSqrt, scaleTime } from "d3";
-import { curveBasis, line } from "d3-shape";
+import { CurveFactory, curveBasis, curveLinear, line } from "d3-shape";
 
 // Source:
 // code from William Candillon
@@ -149,8 +149,44 @@ export const selectCurve = (cmds: PathCommand[], x: number): Cubic | undefined =
   return undefined;
 };
 
-export const getYForX = (path: SkPath, x: number, precision = 2): number | undefined => {
+const linearYForX = (path: SkPath, x: number, precision = 2): number => {
   "worklet";
+
+  const cmds = path.toCmds();
+  let from: Vector = vec(0, 0);
+  for (let i = 0; i < cmds.length; i++) {
+    const cmd = cmds[i];
+    if (cmd == null) return 0;
+    if (cmd[0] === PathVerb.Move) {
+      from = vec(cmd[1], cmd[2]);
+    } else if (cmd[0] === PathVerb.Line) {
+      const to = vec(cmd[1], cmd[2]);
+      if (x >= from.x && x <= to.x) {
+        const t = (x - from.x) / (to.x - from.x);
+        return round(from.y + t * (to.y - from.y), precision);
+      }
+      from = to;
+    }
+  }
+  return 0;
+};
+
+export interface GetYForXProps {
+  path: SkPath;
+  x: number;
+  curveType: ComputePathProps["curveType"];
+  precision?: number;
+}
+
+export const getYForX = ({
+  path,
+  x,
+  curveType,
+  precision = 2,
+}: GetYForXProps): number | undefined => {
+  "worklet";
+
+  if (curveType === "linear") return linearYForX(path, x, precision);
 
   const c = selectCurve(path.toCmds(), x);
   if (c == null) return undefined;
@@ -158,25 +194,31 @@ export const getYForX = (path: SkPath, x: number, precision = 2): number | undef
   return cubicBezierYForX(x, c.from, c.c1, c.c2, c.to, precision);
 };
 
-interface ComputePathProps {
+export interface ComputePathProps {
   width: number;
   height: number;
   points: [number, number][];
+  cursorRadius: number;
   minValue: number;
   maxValue: number;
   minTimestamp: number;
   maxTimestamp: number;
+  curveType: "linear" | "basis";
 }
 
 export const computePath = ({
   width,
   height,
   points,
+  cursorRadius,
   minTimestamp,
   maxTimestamp,
   minValue,
   maxValue,
+  curveType,
 }: ComputePathProps): SkPath => {
+  "worklet";
+
   const straightLine = Skia.Path.Make()
     .moveTo(0, height / 2)
     .lineTo(width, height / 2);
@@ -186,11 +228,14 @@ export const computePath = ({
   if (points.length === 0) return straightLine;
 
   const scaleX = scaleTime().domain([minTimestamp, maxTimestamp]).range([0, width]);
-  const scaleY = scaleSqrt().domain([minValue, maxValue]).range([height, 0]);
+  const scaleY = scaleSqrt()
+    .domain([minValue, maxValue])
+    .range([height - cursorRadius, cursorRadius]);
+  const curve: CurveFactory = curveType === "linear" ? curveLinear : curveBasis;
   const rawPath = line()
     .x(([x]) => scaleX(x))
     .y(([, y]) => scaleY(y))
-    .curve(curveBasis)(points);
+    .curve(curve)(points);
 
   if (rawPath === null) return straightLine;
   return Skia.Path.MakeFromSVGString(rawPath) ?? straightLine;

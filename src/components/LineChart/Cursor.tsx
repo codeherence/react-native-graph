@@ -4,7 +4,7 @@ import { useDerivedValue } from "react-native-reanimated";
 import type { SharedValue } from "react-native-reanimated";
 
 import type { BannerComponentProps } from "./Banner";
-import { getYForX } from "./Math";
+import { type GetYForXProps, getYForX } from "./Math";
 
 interface CursorProps {
   height: number;
@@ -12,6 +12,7 @@ interface CursorProps {
   path: SkPath | null;
   x: SharedValue<number>;
   BannerComponent: React.FC<BannerComponentProps> | null;
+  curveType: GetYForXProps["curveType"];
 }
 
 const BASE_LABEL_MARGIN = 8;
@@ -21,9 +22,13 @@ export const Cursor: React.FC<CursorProps> = ({
   path,
   x,
   height,
+  curveType,
   BannerComponent,
 }) => {
-  const y = useDerivedValue(() => (path ? getYForX(path, x.value, 2) ?? 0 : 0), [path]);
+  const y = useDerivedValue(
+    () => (path ? getYForX({ path, x: x.value, curveType }) ?? 0 : 0),
+    [path]
+  );
 
   const lineTransform = useDerivedValue(() => {
     return [{ translateX: x.value }];
