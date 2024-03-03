@@ -1,33 +1,30 @@
 import { LineChart } from "@codeherence/react-native-graph";
 import { useMemo } from "react";
-import { View, useWindowDimensions } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Banner } from "../components/Banner";
 
 export default () => {
   const { top, bottom } = useSafeAreaInsets();
-  const { width, height } = useWindowDimensions();
 
   const data: [number, number][] = useMemo(() => {
-    return Array.from({ length: 20 }, (_, i) => [i, Math.random() * 200]);
+    return Array.from({ length: 20 }, (_, i) => [i, Math.random() * 2000]);
   }, []);
 
   return (
-    <View
-      style={{
-        paddingTop: top,
-        paddingBottom: bottom,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <View style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}>
       <LineChart
         points={data}
-        width={width}
-        height={height - (top + bottom)}
+        style={styles.chart}
         BannerComponent={Banner}
+        TopAxisLabel={() => <View />}
       />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  chart: { flex: 1, maxHeight: 200 },
+});

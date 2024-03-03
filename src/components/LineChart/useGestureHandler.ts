@@ -4,10 +4,9 @@ import type { SharedValueType } from "@shopify/react-native-skia";
 interface UseGestureHandlerProps {
   x: SharedValueType;
   cursorRadius: number;
-  width: number;
 }
 
-export const useGestureHandler = ({ x, width, cursorRadius }: UseGestureHandlerProps) => {
+export const useGestureHandler = ({ x, cursorRadius }: UseGestureHandlerProps) => {
   return useTouchHandler(
     {
       onStart: (ti) => {
@@ -18,7 +17,7 @@ export const useGestureHandler = ({ x, width, cursorRadius }: UseGestureHandlerP
       },
       onEnd: () => {
         // Hide the cursor when the touch ends
-        x.value = width + cursorRadius;
+        x.value = -cursorRadius;
       },
     },
     [x]

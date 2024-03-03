@@ -1,35 +1,15 @@
 import { Circle, Group, Line, vec } from "@shopify/react-native-skia";
-import type { AnimatedProp, SkPath } from "@shopify/react-native-skia";
 import { useDerivedValue } from "react-native-reanimated";
-import type { SharedValue } from "react-native-reanimated";
-
-import type { BannerComponentProps } from "./Banner";
-import { type GetYForXProps, getYForX } from "./Math";
+import type { DerivedValue, SharedValue } from "react-native-reanimated";
 
 interface CursorProps {
+  x: SharedValue<number>;
+  y: DerivedValue<number>;
   height: number;
   cursorRadius: number;
-  path: SkPath | null;
-  x: SharedValue<number>;
-  BannerComponent: React.FC<BannerComponentProps> | null;
-  curveType: GetYForXProps["curveType"];
 }
 
-const BASE_LABEL_MARGIN = 8;
-
-export const Cursor: React.FC<CursorProps> = ({
-  cursorRadius,
-  path,
-  x,
-  height,
-  curveType,
-  BannerComponent,
-}) => {
-  const y = useDerivedValue(
-    () => (path ? getYForX({ path, x: x.value, curveType }) ?? 0 : 0),
-    [path]
-  );
-
+export const Cursor: React.FC<CursorProps> = ({ x, y, height, cursorRadius }) => {
   const lineTransform = useDerivedValue(() => {
     return [{ translateX: x.value }];
   });
@@ -38,13 +18,19 @@ export const Cursor: React.FC<CursorProps> = ({
     return [{ translateX: x.value }, { translateY: y.value }];
   }, []);
 
-  const animatedText: AnimatedProp<string> = useDerivedValue(() => {
-    return `$${y.value.toFixed(2)}`;
-  });
+  // const animatedText: AnimatedProp<string> = useDerivedValue(() => {
+  //   // Must interpolate the y value to the proper value
+  //   const interpolatedY = interpolate(
+  //     y.value,
+  //     [cursorRadius, height + cursorRadius],
+  //     [maxValue, minValue]
+  //   );
+  //   return formatter(interpolatedY);
+  // }, [maxValue, minValue, height, formatter]);
 
-  const bannerTransform = useDerivedValue(() => {
-    return [{ translateX: cursorRadius }, { translateY: -cursorRadius - BASE_LABEL_MARGIN }];
-  });
+  // const bannerTransform = useDerivedValue(() => {
+  //   return [{ translateX: cursorRadius }, { translateY: -cursorRadius - BASE_LABEL_MARGIN }];
+  // });
 
   return (
     <>
@@ -56,11 +42,11 @@ export const Cursor: React.FC<CursorProps> = ({
         strokeWidth={2}
       />
       <Group transform={transform}>
-        {BannerComponent && (
+        {/* {BannerComponent && (
           <Group transform={bannerTransform} style="fill" color="red">
             {BannerComponent({ text: animatedText })}
           </Group>
-        )}
+        )} */}
         <Circle cx={0} cy={0} r={cursorRadius} color="black" />
       </Group>
     </>

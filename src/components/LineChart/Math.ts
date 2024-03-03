@@ -1,7 +1,7 @@
 import type { Vector, PathCommand, SkPath } from "@shopify/react-native-skia";
 import { PathVerb, Skia, vec } from "@shopify/react-native-skia";
 import { scaleSqrt, scaleTime } from "d3";
-import { CurveFactory, curveBasis, curveLinear, line } from "d3-shape";
+import { CurveFactory, curveLinear, line } from "d3-shape";
 
 // Source:
 // code from William Candillon
@@ -161,6 +161,7 @@ const linearYForX = (path: SkPath, x: number, precision = 2): number => {
       from = vec(cmd[1], cmd[2]);
     } else if (cmd[0] === PathVerb.Line) {
       const to = vec(cmd[1], cmd[2]);
+      // If the x is between the two points, return the rounded interpolation of the y value
       if (x >= from.x && x <= to.x) {
         const t = (x - from.x) / (to.x - from.x);
         return round(from.y + t * (to.y - from.y), precision);
@@ -174,24 +175,13 @@ const linearYForX = (path: SkPath, x: number, precision = 2): number => {
 export interface GetYForXProps {
   path: SkPath;
   x: number;
-  curveType: ComputePathProps["curveType"];
   precision?: number;
 }
 
-export const getYForX = ({
-  path,
-  x,
-  curveType,
-  precision = 2,
-}: GetYForXProps): number | undefined => {
+export const getYForX = ({ path, x, precision = 2 }: GetYForXProps): number | undefined => {
   "worklet";
 
-  if (curveType === "linear") return linearYForX(path, x, precision);
-
-  const c = selectCurve(path.toCmds(), x);
-  if (c == null) return undefined;
-
-  return cubicBezierYForX(x, c.from, c.c1, c.c2, c.to, precision);
+  return linearYForX(path, x, precision);
 };
 
 export interface ComputePathProps {
@@ -203,7 +193,7 @@ export interface ComputePathProps {
   maxValue: number;
   minTimestamp: number;
   maxTimestamp: number;
-  curveType: "linear" | "basis";
+  curveType: "linear";
 }
 
 export const computePath = ({
@@ -231,7 +221,7 @@ export const computePath = ({
   const scaleY = scaleSqrt()
     .domain([minValue, maxValue])
     .range([height - cursorRadius, cursorRadius]);
-  const curve: CurveFactory = curveType === "linear" ? curveLinear : curveBasis;
+  const curve: CurveFactory = curveType === "linear" ? curveLinear : curveLinear;
   const rawPath = line()
     .x(([x]) => scaleX(x))
     .y(([, y]) => scaleY(y))
