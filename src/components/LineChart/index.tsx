@@ -2,18 +2,20 @@ import { Canvas, Path } from "@shopify/react-native-skia";
 import { useCallback, useMemo, useState } from "react";
 import { LayoutChangeEvent, StyleSheet, View, ViewProps } from "react-native";
 import { GestureDetector } from "react-native-gesture-handler";
-import { useDerivedValue, useSharedValue } from "react-native-reanimated";
+import { useSharedValue } from "react-native-reanimated";
 
 import { AxisLabelComponentProps, AxisLabelContainer } from "./AxisLabel";
 import { Cursor } from "./Cursor";
-import { computePath, getYForX, type ComputePathProps, computeGraphData } from "./Math";
+import { computePath, type ComputePathProps, computeGraphData } from "./Math";
 import {
   DEFAULT_CURSOR_RADIUS,
   DEFAULT_CURVE_TYPE,
   DEFAULT_FORMATTER,
   DEFAULT_STROKE_WIDTH,
 } from "./constants";
-import { useGestures } from "./useGestures";
+import { useGestures, type UseGestureProps } from "./useGestures";
+
+type FilterNull<T> = T extends null ? never : T;
 
 export type LineChartProps = ViewProps & {
   /** Array of [x, y] points for the chart */
@@ -25,6 +27,13 @@ export type LineChartProps = ViewProps & {
   formatter?: (price: number) => string;
   TopAxisLabel?: React.FC<AxisLabelComponentProps>;
   BottomAxisLabel?: React.FC<AxisLabelComponentProps>;
+  /** Callback when the pan gesture begins. This function must be a worklet function. */
+  onPanGestureBegin?: FilterNull<UseGestureProps["onPanGestureBegin"]>;
+  onPanGestureChange?: FilterNull<UseGestureProps["onPanGestureChange"]>;
+  onPanGestureEnd?: FilterNull<UseGestureProps["onPanGestureEnd"]>;
+  onHoverGestureBegin?: FilterNull<UseGestureProps["onHoverGestureBegin"]>;
+  onHoverGestureChange?: FilterNull<UseGestureProps["onHoverGestureChange"]>;
+  onHoverGestureEnd?: FilterNull<UseGestureProps["onHoverGestureEnd"]>;
 };
 
 export const LineChart: React.FC<LineChartProps> = ({
@@ -35,6 +44,12 @@ export const LineChart: React.FC<LineChartProps> = ({
   formatter = DEFAULT_FORMATTER,
   TopAxisLabel = null,
   BottomAxisLabel = null,
+  onPanGestureBegin = null,
+  onPanGestureChange = null,
+  onPanGestureEnd = null,
+  onHoverGestureBegin = null,
+  onHoverGestureChange = null,
+  onHoverGestureEnd = null,
   ...viewProps
 }) => {
   const [width, setWidth] = useState(0);
@@ -42,7 +57,7 @@ export const LineChart: React.FC<LineChartProps> = ({
 
   // Initially -cursorRadius so that the cursor is offscreen
   const x = useSharedValue(-cursorRadius);
-  const gestures = useGestures({ x, cursorRadius });
+  const y = useSharedValue(0);
 
   // We separate the computation of the data from the rendering. This is so that these values are
   // not recomputed when the width or height of the chart changes, but only when the points change.
@@ -52,9 +67,21 @@ export const LineChart: React.FC<LineChartProps> = ({
     return computePath({ ...data, width, height, cursorRadius, curveType });
   }, [data, width, height, cursorRadius, curveType]);
 
-  const y = useDerivedValue(() => {
-    return path ? getYForX({ path, x: x.value }) ?? 0 : 0;
-  }, [path]);
+  const gestures = useGestures({
+    x,
+    y,
+    path,
+    height,
+    minValue: data.minValue,
+    maxValue: data.maxValue,
+    cursorRadius,
+    onPanGestureBegin,
+    onPanGestureChange,
+    onPanGestureEnd,
+    onHoverGestureBegin,
+    onHoverGestureChange,
+    onHoverGestureEnd,
+  });
 
   const onLayout = useCallback((e: LayoutChangeEvent) => {
     setWidth(e.nativeEvent.layout.width);

@@ -50,9 +50,8 @@ export interface GetYForXProps {
   precision?: number;
 }
 
-export const getYForX = ({ path, x, precision = 2 }: GetYForXProps): number | undefined => {
+export const getYForX = ({ path, x, precision = 2 }: GetYForXProps): number => {
   "worklet";
-
   return linearYForX({ path, x, precision });
 };
 
