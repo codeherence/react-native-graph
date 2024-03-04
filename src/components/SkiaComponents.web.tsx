@@ -42,6 +42,8 @@ const SkiaLoaderComponent: React.FC<SkiaLoaderComponentProps> = ({ Component }) 
   return <Component />;
 };
 
-export const LineChart: React.FC<LineChartProps> = (props) => {
+const LineChart: React.FC<LineChartProps> = (props) => {
   return <SkiaLoaderComponent Component={() => <LineChartImpl {...props} />} />;
 };
+
+export { LineChart, type LineChartProps };
