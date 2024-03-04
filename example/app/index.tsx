@@ -3,8 +3,6 @@ import { useCallback, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Banner } from "../components/Banner";
-
 const generateRandomData = (): [number, number][] => {
   return Array.from({ length: 30 }, (_, i) => [i, Math.random() * 2000]);
 };
@@ -32,7 +30,6 @@ export default () => {
       <LineChart
         points={data}
         style={styles.chart}
-        BannerComponent={Banner}
         TopAxisLabel={AxisLabel}
         BottomAxisLabel={AxisLabel}
       />

@@ -5,7 +5,6 @@ import { GestureDetector } from "react-native-gesture-handler";
 import { useDerivedValue, useSharedValue } from "react-native-reanimated";
 
 import { AxisLabelComponentProps, AxisLabelContainer } from "./AxisLabel";
-import type { BannerComponentProps } from "./Banner";
 import { Cursor } from "./Cursor";
 import { computePath, getYForX, type ComputePathProps, computeGraphData } from "./Math";
 import {
@@ -24,7 +23,6 @@ export type LineChartProps = ViewProps & {
   curveType?: ComputePathProps["curveType"];
   /** A worklet function to format a given price. */
   formatter?: (price: number) => string;
-  BannerComponent?: React.FC<BannerComponentProps>;
   TopAxisLabel?: React.FC<AxisLabelComponentProps>;
   BottomAxisLabel?: React.FC<AxisLabelComponentProps>;
 };
@@ -34,7 +32,6 @@ export const LineChart: React.FC<LineChartProps> = ({
   strokeWidth = DEFAULT_STROKE_WIDTH,
   cursorRadius = DEFAULT_CURSOR_RADIUS,
   curveType = DEFAULT_CURVE_TYPE,
-  BannerComponent = null,
   formatter = DEFAULT_FORMATTER,
   TopAxisLabel = null,
   BottomAxisLabel = null,
