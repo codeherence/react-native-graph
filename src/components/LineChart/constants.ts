@@ -1,4 +1,4 @@
-import { ComputePathProps } from "./Math";
+import { ComputePathProps } from "./computations";
 
 export const DEFAULT_COLOR = "black";
 export const DEFAULT_STROKE_WIDTH = 2;

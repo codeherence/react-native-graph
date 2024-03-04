@@ -6,7 +6,7 @@ import { useSharedValue } from "react-native-reanimated";
 
 import { AxisLabelComponentProps, AxisLabelContainer } from "./AxisLabel";
 import { Cursor } from "./Cursor";
-import { computePath, type ComputePathProps, computeGraphData } from "./Math";
+import { computePath, type ComputePathProps, computeGraphData } from "./computations";
 import {
   DEFAULT_CURSOR_RADIUS,
   DEFAULT_CURVE_TYPE,

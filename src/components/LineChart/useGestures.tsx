@@ -6,7 +6,7 @@ import {
 } from "react-native-gesture-handler";
 import { SharedValue, interpolate } from "react-native-reanimated";
 
-import { getYForX } from "./Math";
+import { getYForX } from "./computations";
 
 type PanGestureHandlerOnBeginEventPayload = {
   point: number;
