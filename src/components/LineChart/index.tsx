@@ -1,6 +1,6 @@
 import { Canvas, Path } from "@shopify/react-native-skia";
 import { useCallback, useMemo, useState } from "react";
-import { LayoutChangeEvent, Platform, StyleSheet, View, ViewProps } from "react-native";
+import { LayoutChangeEvent, StyleSheet, View, ViewProps } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { useDerivedValue, useSharedValue } from "react-native-reanimated";
 
@@ -28,8 +28,6 @@ export type LineChartProps = ViewProps & {
   BottomAxisLabel?: React.FC<AxisLabelComponentProps>;
 };
 
-const GestureMethod = Platform.OS === "web" ? Gesture.Hover : Gesture.Pan;
-
 export const LineChart: React.FC<LineChartProps> = ({
   points,
   strokeWidth = DEFAULT_STROKE_WIDTH,
@@ -46,12 +44,20 @@ export const LineChart: React.FC<LineChartProps> = ({
 
   // Initially -cursorRadius so that the cursor is offscreen
   const x = useSharedValue(-cursorRadius);
-  const gesture = GestureMethod()
+  const panGesture = Gesture.Pan()
     // Follow the cursor on the x-axis
     .onBegin((evt) => (x.value = evt.x))
     .onChange((evt) => (x.value = evt.x))
     // When the gesture ends, we reset the x value to -cursorRadius so that the cursor is offscreen
     .onEnd(() => (x.value = -cursorRadius));
+  const hoverGesture = Gesture.Hover()
+    // Follow the cursor on the x-axis
+    .onBegin((evt) => (x.value = evt.x))
+    .onChange((evt) => (x.value = evt.x))
+    // When the gesture ends, we reset the x value to -cursorRadius so that the cursor is offscreen
+    .onEnd(() => (x.value = -cursorRadius));
+
+  const gesture = Gesture.Race(hoverGesture, panGesture);
 
   // We separate the computation of the data from the rendering. This is so that these values are
   // not recomputed when the width or height of the chart changes, but only when the points change.
