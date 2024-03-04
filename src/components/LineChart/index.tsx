@@ -50,7 +50,7 @@ export const LineChart: React.FC<LineChartProps> = ({
 
   const path = useMemo(() => {
     return computePath({ ...data, width, height, cursorRadius, curveType });
-  }, [data, width, height]);
+  }, [data, width, height, cursorRadius, curveType]);
 
   const y = useDerivedValue(() => {
     return path ? getYForX({ path, x: x.value }) ?? 0 : 0;
