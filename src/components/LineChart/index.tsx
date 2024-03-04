@@ -1,18 +1,19 @@
 import { Canvas, Path } from "@shopify/react-native-skia";
 import { useCallback, useMemo, useState } from "react";
-import { LayoutChangeEvent, StyleSheet, View, ViewProps } from "react-native";
+import { LayoutChangeEvent, Platform, StyleSheet, Text, View, ViewProps } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { useDerivedValue, useSharedValue } from "react-native-reanimated";
 
+import { AxisLabelContainer } from "./AxisLabel";
 import type { BannerComponentProps } from "./Banner";
 import { Cursor } from "./Cursor";
-import { computePath, getYForX, type ComputePathProps } from "./Math";
+import { computePath, getYForX, type ComputePathProps, computeGraphData } from "./Math";
 import {
   DEFAULT_CURSOR_RADIUS,
   DEFAULT_CURVE_TYPE,
   DEFAULT_FORMATTER,
   DEFAULT_STROKE_WIDTH,
 } from "./constants";
-import { useGestureHandler } from "./useGestureHandler";
 
 export type LineChartProps = ViewProps & {
   /** Array of [x, y] points for the chart */
@@ -27,8 +28,15 @@ export type LineChartProps = ViewProps & {
   BottomAxisLabel?: React.FC;
 };
 
+const currencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
+
+const GestureMethod = Platform.OS === "web" ? Gesture.Hover : Gesture.Pan;
+
 export const LineChart: React.FC<LineChartProps> = ({
-  points: _points,
+  points,
   strokeWidth = DEFAULT_STROKE_WIDTH,
   cursorRadius = DEFAULT_CURSOR_RADIUS,
   curveType = DEFAULT_CURVE_TYPE,
@@ -43,24 +51,20 @@ export const LineChart: React.FC<LineChartProps> = ({
 
   // Initially -cursorRadius so that the cursor is offscreen
   const x = useSharedValue(-cursorRadius);
-  const onTouch = useGestureHandler({ x, cursorRadius });
+  const gesture = GestureMethod()
+    // Follow the cursor on the x-axis
+    .onBegin((evt) => (x.value = evt.x))
+    .onChange((evt) => (x.value = evt.x))
+    // When the gesture ends, we reset the x value to -cursorRadius so that the cursor is offscreen
+    .onEnd(() => (x.value = -cursorRadius));
 
   // We separate the computation of the data from the rendering. This is so that these values are
   // not recomputed when the width or height of the chart changes, but only when the points change.
-  const computedData = useMemo(() => {
-    const timestamps = _points.map(([timestamp]) => timestamp);
-    const values = _points.map(([, value]) => value);
-    const minTimestamp = Math.min(...timestamps);
-    const maxTimestamp = Math.max(...timestamps);
-    const minValue = Math.min(...values);
-    const maxValue = Math.max(...values);
-
-    return { points: _points, minTimestamp, maxTimestamp, minValue, maxValue };
-  }, [_points]);
+  const data = useMemo(() => computeGraphData(points), [points]);
 
   const path = useMemo(() => {
-    return computePath({ ...computedData, width, height, cursorRadius, curveType });
-  }, [computedData, width, height]);
+    return computePath({ ...data, width, height, cursorRadius, curveType });
+  }, [data, width, height]);
 
   const y = useDerivedValue(() => {
     return path ? getYForX({ path, x: x.value }) ?? 0 : 0;
@@ -72,18 +76,27 @@ export const LineChart: React.FC<LineChartProps> = ({
   }, []);
 
   return (
-    <View {...viewProps}>
-      <View style={styles.container} onLayout={onLayout}>
-        <Canvas style={styles.canvas} onTouch={onTouch}>
-          <Path style="stroke" path={path} strokeWidth={strokeWidth} color="black" />
-          <Cursor x={x} y={y} height={height} cursorRadius={cursorRadius} />
-        </Canvas>
-      </View>
+    <View style={[styles.root, viewProps.style]} {...viewProps}>
+      <AxisLabelContainer x={data.maxValueXProportion * width} containerWidth={width}>
+        <Text style={{ fontSize: 12 }}>{currencyFormatter.format(data.maxValue)}</Text>
+      </AxisLabelContainer>
+      <GestureDetector gesture={gesture}>
+        <View style={styles.container} onLayout={onLayout}>
+          <Canvas style={{ height, width }}>
+            <Path style="stroke" path={path} strokeWidth={strokeWidth} color="black" />
+            <Cursor x={x} y={y} height={height} cursorRadius={cursorRadius} />
+          </Canvas>
+        </View>
+      </GestureDetector>
+      <AxisLabelContainer x={data.minValueXProportion * width} containerWidth={width}>
+        <Text style={{ fontSize: 12 }}>{currencyFormatter.format(data.minValue)}</Text>
+      </AxisLabelContainer>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  root: { position: "relative" },
   container: { flex: 1 },
   canvas: { flex: 1 },
 });

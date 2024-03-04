@@ -21,11 +21,17 @@ config.resolver.extraNodeModules = new Proxy(
 // npm v7+ will install ../node_modules/react-native because of peerDependencies.
 // To prevent the incompatible react-native bewtween ./node_modules/react-native and ../node_modules/react-native,
 // excludes the one from the parent folder when bundling.
+
+const IGNORED_LIBS = [
+  "react-native",
+  "@shopify/react-native-skia",
+  "react-native-reanimated",
+  "react-native-gesture-handler",
+];
+
 config.resolver.blockList = [
   ...Array.from(config.resolver.blockList ?? []),
-  new RegExp(path.resolve("..", "node_modules", "react-native")),
-  new RegExp(path.resolve("..", "node_modules", "@shopify/react-native-skia")),
-  new RegExp(path.resolve("..", "node_modules", "react-native-reanimated")),
+  ...IGNORED_LIBS.map((lib) => new RegExp(path.resolve("..", "node_modules", lib))),
 ];
 
 config.resolver.nodeModulesPaths = [
