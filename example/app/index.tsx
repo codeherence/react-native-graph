@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Banner } from "../components/Banner";
 
 const generateRandomData = (): [number, number][] => {
-  return Array.from({ length: 100 }, (_, i) => [i, Math.random() * 2000]);
+  return Array.from({ length: 30 }, (_, i) => [i, Math.random() * 2000]);
 };
 
 const formatter = new Intl.NumberFormat("en-US", {

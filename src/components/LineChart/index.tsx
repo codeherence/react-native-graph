@@ -1,7 +1,7 @@
 import { Canvas, Path } from "@shopify/react-native-skia";
 import { useCallback, useMemo, useState } from "react";
 import { LayoutChangeEvent, StyleSheet, View, ViewProps } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { GestureDetector } from "react-native-gesture-handler";
 import { useDerivedValue, useSharedValue } from "react-native-reanimated";
 
 import { AxisLabelComponentProps, AxisLabelContainer } from "./AxisLabel";
@@ -14,6 +14,7 @@ import {
   DEFAULT_FORMATTER,
   DEFAULT_STROKE_WIDTH,
 } from "./constants";
+import { useGestures } from "./useGestures";
 
 export type LineChartProps = ViewProps & {
   /** Array of [x, y] points for the chart */
@@ -44,20 +45,7 @@ export const LineChart: React.FC<LineChartProps> = ({
 
   // Initially -cursorRadius so that the cursor is offscreen
   const x = useSharedValue(-cursorRadius);
-  const panGesture = Gesture.Pan()
-    // Follow the cursor on the x-axis
-    .onBegin((evt) => (x.value = evt.x))
-    .onChange((evt) => (x.value = evt.x))
-    // When the gesture ends, we reset the x value to -cursorRadius so that the cursor is offscreen
-    .onEnd(() => (x.value = -cursorRadius));
-  const hoverGesture = Gesture.Hover()
-    // Follow the cursor on the x-axis
-    .onBegin((evt) => (x.value = evt.x))
-    .onChange((evt) => (x.value = evt.x))
-    // When the gesture ends, we reset the x value to -cursorRadius so that the cursor is offscreen
-    .onEnd(() => (x.value = -cursorRadius));
-
-  const gesture = Gesture.Race(hoverGesture, panGesture);
+  const gestures = useGestures({ x, cursorRadius });
 
   // We separate the computation of the data from the rendering. This is so that these values are
   // not recomputed when the width or height of the chart changes, but only when the points change.
@@ -83,7 +71,7 @@ export const LineChart: React.FC<LineChartProps> = ({
           <TopAxisLabel value={data.maxValue} />
         </AxisLabelContainer>
       )}
-      <GestureDetector gesture={gesture}>
+      <GestureDetector gesture={gestures}>
         <View style={styles.container} onLayout={onLayout}>
           <Canvas style={{ height, width }}>
             <Path style="stroke" path={path} strokeWidth={strokeWidth} color="black" />
