@@ -1,10 +1,10 @@
 import { Canvas, Path } from "@shopify/react-native-skia";
 import { useCallback, useMemo, useState } from "react";
-import { LayoutChangeEvent, Platform, StyleSheet, Text, View, ViewProps } from "react-native";
+import { LayoutChangeEvent, Platform, StyleSheet, View, ViewProps } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { useDerivedValue, useSharedValue } from "react-native-reanimated";
 
-import { AxisLabelContainer } from "./AxisLabel";
+import { AxisLabelComponentProps, AxisLabelContainer } from "./AxisLabel";
 import type { BannerComponentProps } from "./Banner";
 import { Cursor } from "./Cursor";
 import { computePath, getYForX, type ComputePathProps, computeGraphData } from "./Math";
@@ -24,14 +24,9 @@ export type LineChartProps = ViewProps & {
   /** A worklet function to format a given price. */
   formatter?: (price: number) => string;
   BannerComponent?: React.FC<BannerComponentProps>;
-  TopAxisLabel?: React.FC;
-  BottomAxisLabel?: React.FC;
+  TopAxisLabel?: React.FC<AxisLabelComponentProps>;
+  BottomAxisLabel?: React.FC<AxisLabelComponentProps>;
 };
-
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-});
 
 const GestureMethod = Platform.OS === "web" ? Gesture.Hover : Gesture.Pan;
 
@@ -77,9 +72,11 @@ export const LineChart: React.FC<LineChartProps> = ({
 
   return (
     <View style={[styles.root, viewProps.style]} {...viewProps}>
-      <AxisLabelContainer x={data.maxValueXProportion * width} containerWidth={width}>
-        <Text style={{ fontSize: 12 }}>{currencyFormatter.format(data.maxValue)}</Text>
-      </AxisLabelContainer>
+      {TopAxisLabel && (
+        <AxisLabelContainer x={data.maxValueXProportion * width} containerWidth={width}>
+          <TopAxisLabel value={data.maxValue} />
+        </AxisLabelContainer>
+      )}
       <GestureDetector gesture={gesture}>
         <View style={styles.container} onLayout={onLayout}>
           <Canvas style={{ height, width }}>
@@ -88,15 +85,17 @@ export const LineChart: React.FC<LineChartProps> = ({
           </Canvas>
         </View>
       </GestureDetector>
-      <AxisLabelContainer x={data.minValueXProportion * width} containerWidth={width}>
-        <Text style={{ fontSize: 12 }}>{currencyFormatter.format(data.minValue)}</Text>
-      </AxisLabelContainer>
+      {BottomAxisLabel && (
+        <AxisLabelContainer x={data.minValueXProportion * width} containerWidth={width}>
+          <BottomAxisLabel value={data.minValue} />
+        </AxisLabelContainer>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  root: { position: "relative" },
+  root: { position: "relative", overflow: "hidden" },
   container: { flex: 1 },
   canvas: { flex: 1 },
 });
