@@ -1,2 +1,1 @@
-export { LineChart, type LineChartProps } from "./components/SkiaComponents";
-export { type AxisLabelComponentProps } from "./components/LineChart/AxisLabel";
+export { LineChart, type LineChartProps, type AxisLabelComponentProps } from "./components";

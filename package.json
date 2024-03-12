@@ -85,7 +85,7 @@
     "@types/react": "17.0.21"
   },
   "peerDependencies": {
-    "@shopify/react-native-skia": "0.1.241",
+    "@shopify/react-native-skia": "1.0.2",
     "react": ">=18.0.0",
     "react-native": ">=0.71.0",
     "react-native-gesture-handler": ">=2.0.0",
