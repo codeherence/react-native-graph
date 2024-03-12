@@ -1012,6 +1012,8 @@ PODS:
   - React-Mapbuffer (0.73.4):
     - glog
     - React-debug
+  - react-native-animateable-text (0.11.1):
+    - React-Core
   - react-native-safe-area-context (4.8.2):
     - React-Core
   - react-native-skia (1.0.2):
@@ -1263,6 +1265,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector-modern`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
+  - react-native-animateable-text (from `../node_modules/react-native-animateable-text`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-skia (from `../node_modules/@shopify/react-native-skia`)"
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
@@ -1396,6 +1399,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   React-Mapbuffer:
     :path: "../node_modules/react-native/ReactCommon"
+  react-native-animateable-text:
+    :path: "../node_modules/react-native-animateable-text"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-skia:
@@ -1501,6 +1506,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 9ac353eccf6ab54d1e0a33862ba91221d1e88460
   React-logger: 0a57b68dd2aec7ff738195f081f0520724b35dab
   React-Mapbuffer: 63913773ed7f96b814a2521e13e6d010282096ad
+  react-native-animateable-text: 79b31ec28f4ed14dab76b304eb74a24eeb2fa9c0
   react-native-safe-area-context: 0ee144a6170530ccc37a0fd9388e28d06f516a89
   react-native-skia: 0c09a4baff5db09a88dc6c9bfba25bcf4f5bbe8a
   React-nativeconfig: d7af5bae6da70fa15ce44f045621cf99ed24087c

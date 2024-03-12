@@ -1,42 +1,43 @@
 import { SkPath } from "@shopify/react-native-skia";
 import {
   Gesture,
-  type PanGestureHandlerEventPayload,
+  type PanGestureHandlerEventPayload as ReanimatedPanGestureHandlerEventPayload,
   type PanGestureChangeEventPayload,
 } from "react-native-gesture-handler";
 import { SharedValue, interpolate } from "react-native-reanimated";
 
 import { getYForX } from "./computations";
 
-type PanGestureHandlerOnBeginEventPayload = {
+export type PanGestureHandlerEventPayload = ReanimatedPanGestureHandlerEventPayload;
+export type PanGestureHandlerOnBeginEventPayload = {
   point: number;
   event: PanGestureHandlerEventPayload;
 };
-type PanGestureHandlerOnChangeEventPayload = {
+export type PanGestureHandlerOnChangeEventPayload = {
   point: number;
   event: PanGestureHandlerEventPayload & PanGestureChangeEventPayload;
 };
 
 // Extract Hover Gesture onBegin args since it isn't exported by rngh
-type HoverGestureOnBegin = ReturnType<typeof Gesture.Hover>["onBegin"];
-type HoverGestureOnBeginCallBack = Parameters<HoverGestureOnBegin>[0];
-type HoverGestureHandlerOnBeginEventPayload = {
+export type HoverGestureOnBegin = ReturnType<typeof Gesture.Hover>["onBegin"];
+export type HoverGestureOnBeginCallBack = Parameters<HoverGestureOnBegin>[0];
+export type HoverGestureHandlerOnBeginEventPayload = {
   point: number;
   event: Parameters<HoverGestureOnBeginCallBack>[0];
 };
 
 // Extract Hover Gesture onChange args since it isn't exported by rngh
-type HoverGestureOnChange = ReturnType<typeof Gesture.Hover>["onChange"];
-type HoverGestureOnChangeCallBack = Parameters<HoverGestureOnChange>[0];
-type HoverGestureHandlerOnChangeEventPayload = {
+export type HoverGestureOnChange = ReturnType<typeof Gesture.Hover>["onChange"];
+export type HoverGestureOnChangeCallBack = Parameters<HoverGestureOnChange>[0];
+export type HoverGestureHandlerOnChangeEventPayload = {
   point: number;
   event: Parameters<HoverGestureOnChangeCallBack>[0];
 };
 
 // Extract Hover Gesture onEnd args since it isn't exported by rngh
-type HoverGestureOnEnd = ReturnType<typeof Gesture.Hover>["onEnd"];
-type HoverGestureOnEndCallBack = Parameters<HoverGestureOnEnd>[0];
-type HoverGestureHandlerOnEndEventPayload = Parameters<HoverGestureOnEndCallBack>[0];
+export type HoverGestureOnEnd = ReturnType<typeof Gesture.Hover>["onEnd"];
+export type HoverGestureOnEndCallBack = Parameters<HoverGestureOnEnd>[0];
+export type HoverGestureHandlerOnEndEventPayload = Parameters<HoverGestureOnEndCallBack>[0];
 
 export interface UseGestureProps {
   x: SharedValue<number>;

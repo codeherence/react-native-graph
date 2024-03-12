@@ -13,9 +13,15 @@ import {
   DEFAULT_FORMATTER,
   DEFAULT_STROKE_WIDTH,
 } from "./constants";
-import { useGestures, type UseGestureProps } from "./useGestures";
-
-type FilterNull<T> = T extends null ? never : T;
+import {
+  HoverGestureHandlerOnBeginEventPayload,
+  HoverGestureHandlerOnChangeEventPayload,
+  HoverGestureHandlerOnEndEventPayload,
+  PanGestureHandlerEventPayload,
+  PanGestureHandlerOnBeginEventPayload,
+  PanGestureHandlerOnChangeEventPayload,
+  useGestures,
+} from "./useGestures";
 
 export type LineChartProps = ViewProps & {
   /** Array of [x, y] points for the chart */
@@ -28,12 +34,12 @@ export type LineChartProps = ViewProps & {
   TopAxisLabel?: React.FC<AxisLabelComponentProps>;
   BottomAxisLabel?: React.FC<AxisLabelComponentProps>;
   /** Callback when the pan gesture begins. This function must be a worklet function. */
-  onPanGestureBegin?: FilterNull<UseGestureProps["onPanGestureBegin"]>;
-  onPanGestureChange?: FilterNull<UseGestureProps["onPanGestureChange"]>;
-  onPanGestureEnd?: FilterNull<UseGestureProps["onPanGestureEnd"]>;
-  onHoverGestureBegin?: FilterNull<UseGestureProps["onHoverGestureBegin"]>;
-  onHoverGestureChange?: FilterNull<UseGestureProps["onHoverGestureChange"]>;
-  onHoverGestureEnd?: FilterNull<UseGestureProps["onHoverGestureEnd"]>;
+  onPanGestureBegin?: ((payload: PanGestureHandlerOnBeginEventPayload) => void) | null;
+  onPanGestureChange?: ((payload: PanGestureHandlerOnChangeEventPayload) => void) | null;
+  onPanGestureEnd?: ((payload: PanGestureHandlerEventPayload) => void) | null;
+  onHoverGestureBegin?: ((payload: HoverGestureHandlerOnBeginEventPayload) => void) | null;
+  onHoverGestureChange?: ((payload: HoverGestureHandlerOnChangeEventPayload) => void) | null;
+  onHoverGestureEnd?: ((payload: HoverGestureHandlerOnEndEventPayload) => void) | null;
 };
 
 export const LineChart: React.FC<LineChartProps> = ({

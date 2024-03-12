@@ -1,1 +1,11 @@
-export { LineChart, type LineChartProps, type AxisLabelComponentProps } from "./components";
+export {
+  LineChart,
+  type LineChartProps,
+  type AxisLabelComponentProps,
+  PanGestureHandlerOnBeginEventPayload,
+  PanGestureHandlerOnChangeEventPayload,
+  PanGestureHandlerEventPayload,
+  HoverGestureHandlerOnBeginEventPayload,
+  HoverGestureHandlerOnChangeEventPayload,
+  HoverGestureHandlerOnEndEventPayload,
+} from "./components";

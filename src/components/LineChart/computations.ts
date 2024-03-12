@@ -163,8 +163,9 @@ export const computeGraphData = (points: [number, number][]) => {
   const [minValueIndex, minValue] = getMinValue({ points });
   const [maxValueIndex, maxValue] = getMaxValue({ points });
 
-  const minValueXProportion = minValueIndex / points.length;
-  const maxValueXProportion = maxValueIndex / points.length;
+  // We subtract 1 since the index is 0-based
+  const minValueXProportion = minValueIndex / (points.length - 1);
+  const maxValueXProportion = maxValueIndex / (points.length - 1);
 
   return {
     points,
