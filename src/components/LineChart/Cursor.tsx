@@ -18,20 +18,6 @@ export const Cursor: React.FC<CursorProps> = ({ x, y, height, cursorRadius }) =>
     return [{ translateX: x.value }, { translateY: y.value }];
   }, []);
 
-  // const animatedText: AnimatedProp<string> = useDerivedValue(() => {
-  //   // Must interpolate the y value to the proper value
-  //   const interpolatedY = interpolate(
-  //     y.value,
-  //     [cursorRadius, height + cursorRadius],
-  //     [maxValue, minValue]
-  //   );
-  //   return formatter(interpolatedY);
-  // }, [maxValue, minValue, height, formatter]);
-
-  // const bannerTransform = useDerivedValue(() => {
-  //   return [{ translateX: cursorRadius }, { translateY: -cursorRadius - BASE_LABEL_MARGIN }];
-  // });
-
   return (
     <>
       <Line
@@ -42,11 +28,6 @@ export const Cursor: React.FC<CursorProps> = ({ x, y, height, cursorRadius }) =>
         strokeWidth={2}
       />
       <Group transform={transform}>
-        {/* {BannerComponent && (
-          <Group transform={bannerTransform} style="fill" color="red">
-            {BannerComponent({ text: animatedText })}
-          </Group>
-        )} */}
         <Circle cx={0} cy={0} r={cursorRadius} color="black" />
       </Group>
     </>

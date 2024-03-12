@@ -4,6 +4,7 @@ import {
   type PanGestureHandlerOnChangeEventPayload,
   HoverGestureHandlerOnChangeEventPayload,
 } from "@codeherence/react-native-graph";
+import { LinearGradient, vec } from "@shopify/react-native-skia";
 import { useCallback, useEffect, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { useAnimatedProps, useSharedValue } from "react-native-reanimated";
@@ -80,6 +81,10 @@ export default () => {
         onPanGestureEnd={onEndWorklet}
         onHoverGestureEnd={onEndWorklet}
         onHoverGestureChange={onHoverChangeWorklet}
+        strokeWidth={2}
+        PathFill={({ width }) => (
+          <LinearGradient start={vec(0, 0)} end={vec(width, 0)} colors={["blue", "yellow"]} />
+        )}
       />
     </View>
   );

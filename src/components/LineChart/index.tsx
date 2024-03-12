@@ -7,12 +7,7 @@ import { useSharedValue } from "react-native-reanimated";
 import { AxisLabelComponentProps, AxisLabelContainer } from "./AxisLabel";
 import { Cursor } from "./Cursor";
 import { computePath, type ComputePathProps, computeGraphData } from "./computations";
-import {
-  DEFAULT_CURSOR_RADIUS,
-  DEFAULT_CURVE_TYPE,
-  DEFAULT_FORMATTER,
-  DEFAULT_STROKE_WIDTH,
-} from "./constants";
+import { DEFAULT_CURSOR_RADIUS, DEFAULT_CURVE_TYPE, DEFAULT_STROKE_WIDTH } from "./constants";
 import {
   HoverGestureHandlerOnBeginEventPayload,
   HoverGestureHandlerOnChangeEventPayload,
@@ -23,6 +18,12 @@ import {
   useGestures,
 } from "./useGestures";
 
+export interface PathFillProps {
+  strokeWidth: number;
+  height: number;
+  width: number;
+}
+
 export type LineChartProps = ViewProps & {
   /** Array of [x, y] points for the chart */
   points: [number, number][];
@@ -30,9 +31,9 @@ export type LineChartProps = ViewProps & {
   cursorRadius?: number;
   curveType?: ComputePathProps["curveType"];
   /** A worklet function to format a given price. */
-  formatter?: (price: number) => string;
   TopAxisLabel?: React.FC<AxisLabelComponentProps>;
   BottomAxisLabel?: React.FC<AxisLabelComponentProps>;
+  PathFill?: React.FC<PathFillProps>;
   /** Callback when the pan gesture begins. This function must be a worklet function. */
   onPanGestureBegin?: ((payload: PanGestureHandlerOnBeginEventPayload) => void) | null;
   onPanGestureChange?: ((payload: PanGestureHandlerOnChangeEventPayload) => void) | null;
@@ -47,9 +48,9 @@ export const LineChart: React.FC<LineChartProps> = ({
   strokeWidth = DEFAULT_STROKE_WIDTH,
   cursorRadius = DEFAULT_CURSOR_RADIUS,
   curveType = DEFAULT_CURVE_TYPE,
-  formatter = DEFAULT_FORMATTER,
   TopAxisLabel = null,
   BottomAxisLabel = null,
+  PathFill = null,
   onPanGestureBegin = null,
   onPanGestureChange = null,
   onPanGestureEnd = null,
@@ -104,7 +105,9 @@ export const LineChart: React.FC<LineChartProps> = ({
       <GestureDetector gesture={gestures}>
         <View style={styles.container} onLayout={onLayout}>
           <Canvas style={{ height, width }}>
-            <Path style="stroke" path={path} strokeWidth={strokeWidth} color="black" />
+            <Path style="stroke" path={path} strokeWidth={strokeWidth} color="white">
+              {PathFill && PathFill({ width, height, strokeWidth })}
+            </Path>
             <Cursor x={x} y={y} height={height} cursorRadius={cursorRadius} />
           </Canvas>
         </View>
