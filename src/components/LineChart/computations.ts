@@ -26,22 +26,27 @@ const linearYForX = ({ path, x, precision = 2 }: LinearYForXProps): number => {
 
   const cmds = path.toCmds();
   let from: Vector = vec(0, 0);
+  let found = false;
+  let yValue = 0;
+
   for (let i = 0; i < cmds.length; i++) {
     const cmd = cmds[i];
-    if (cmd == null) return 0;
+    if (cmd == null) break;
     if (cmd[0] === PathVerb.Move) {
       from = vec(cmd[1], cmd[2]);
     } else if (cmd[0] === PathVerb.Line) {
       const to = vec(cmd[1], cmd[2]);
-      // If the x is between the two points, return the rounded interpolation of the y value
-      if (x >= from.x && x <= to.x) {
+      if ((x >= from.x && x <= to.x) || (x <= from.x && x >= to.x)) {
         const t = (x - from.x) / (to.x - from.x);
-        return round({ value: from.y + t * (to.y - from.y), precision });
+        yValue = from.y + t * (to.y - from.y);
+        found = true;
+        break;
       }
       from = to;
     }
   }
-  return 0;
+
+  return found ? round({ value: yValue, precision }) : 0;
 };
 
 export interface GetYForXProps {
