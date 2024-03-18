@@ -77,7 +77,8 @@ export const useGestures = ({
   onHoverGestureEnd,
 }: UseGestureProps) => {
   const panGesture = Gesture.Pan()
-    .onBegin((event) => {
+    .activeOffsetX([-5, 5])
+    .onStart((event) => {
       x.value = event.x;
       y.value = getYForX({ path, x: event.x });
       const point = interpolate(
@@ -103,7 +104,7 @@ export const useGestures = ({
     });
 
   const hoverGesture = Gesture.Hover()
-    .onBegin((event) => {
+    .onStart((event) => {
       x.value = event.x;
       y.value = getYForX({ path, x: event.x });
       const point = interpolate(

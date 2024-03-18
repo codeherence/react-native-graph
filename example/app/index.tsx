@@ -6,7 +6,7 @@ import {
 } from "@codeherence/react-native-graph";
 import { LinearGradient, vec } from "@shopify/react-native-skia";
 import { useCallback, useMemo, useReducer } from "react";
-import { Button, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useAnimatedProps, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -44,13 +44,14 @@ const priceMap = {
 export default () => {
   const [counter, increment] = useReducer((s: number) => s + 1, 0);
 
-  const { width } = useWindowDimensions();
-  const { top, bottom } = useSafeAreaInsets();
-
-  const symbol: "msft" | "aapl" = counter % 2 === 0 ? "msft" : "aapl";
-  const data: [number, number][] = useMemo(() => priceMap[symbol], [symbol]);
+  const { top, bottom, left, right } = useSafeAreaInsets();
 
   const latestPrice = useSharedValue("0");
+  const symbol: "msft" | "aapl" = counter % 2 === 0 ? "msft" : "aapl";
+  const data: [number, number][] = useMemo(() => {
+    latestPrice.value = uiFormatter(priceMap[symbol][priceMap[symbol].length - 1]![1]);
+    return priceMap[symbol];
+  }, [symbol]);
 
   const onHoverChangeWorklet = useCallback((evt: HoverGestureHandlerOnChangeEventPayload) => {
     "worklet";
@@ -72,12 +73,21 @@ export default () => {
   }, []);
 
   return (
-    <View style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{
+        paddingTop: top,
+        paddingBottom: bottom,
+        paddingLeft: left,
+        paddingRight: right,
+      }}
+      showsVerticalScrollIndicator={false}
+    >
       <Button title={`Showing ${symbol}. Click to switch.`} onPress={increment} />
       <AnimatedText style={styles.price} animatedProps={animatedProps} />
       <LineChart
         points={data}
-        style={[styles.chart, { width }]}
+        style={styles.chart}
         TopAxisLabel={AxisLabel}
         BottomAxisLabel={AxisLabel}
         onPanGestureChange={onGestureChangeWorklet}
@@ -93,12 +103,12 @@ export default () => {
           />
         )}
       />
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  chart: { flex: 1, maxHeight: 400 },
+  chart: { flex: 1, minHeight: 400 },
   price: { fontSize: 32 },
 });
