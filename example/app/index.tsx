@@ -5,12 +5,13 @@ import {
   HoverGestureHandlerOnChangeEventPayload,
 } from "@codeherence/react-native-graph";
 import { LinearGradient, vec } from "@shopify/react-native-skia";
-import { useCallback, useMemo } from "react";
-import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { useCallback, useMemo, useReducer } from "react";
+import { Button, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { useAnimatedProps, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import AnimatedText from "../components/AnimatedText";
+import aapl_prices from "../data/aapl_prices.json";
 import msft_prices from "../data/msft_prices.json";
 
 const formatter = new Intl.NumberFormat("en-US", {
@@ -31,16 +32,23 @@ const uiFormatter = (price: number) => {
   }).format(price);
 };
 
+const priceMap = {
+  msft: msft_prices.results
+    .reverse()
+    .map<[number, number]>((r) => [new Date(r.date).getTime(), r.close]),
+  aapl: aapl_prices.results
+    .reverse()
+    .map<[number, number]>((r) => [new Date(r.date).getTime(), r.close]),
+};
+
 export default () => {
+  const [counter, increment] = useReducer((s: number) => s + 1, 0);
+
   const { width } = useWindowDimensions();
   const { top, bottom } = useSafeAreaInsets();
-  const data: [number, number][] = useMemo(
-    () =>
-      msft_prices.results
-        .reverse()
-        .map<[number, number]>((r) => [new Date(r.date).getTime(), r.close]),
-    []
-  );
+
+  const symbol: "msft" | "aapl" = counter % 2 === 0 ? "msft" : "aapl";
+  const data: [number, number][] = useMemo(() => priceMap[symbol], [symbol]);
 
   const latestPrice = useSharedValue("0");
 
@@ -65,6 +73,7 @@ export default () => {
 
   return (
     <View style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}>
+      <Button title={`Showing ${symbol}. Click to switch.`} onPress={increment} />
       <AnimatedText style={styles.price} animatedProps={animatedProps} />
       <LineChart
         points={data}
