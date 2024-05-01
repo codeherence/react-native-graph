@@ -1,114 +1,31 @@
-import {
-  type AxisLabelComponentProps,
-  LineChart,
-  type PanGestureHandlerOnChangeEventPayload,
-  HoverGestureHandlerOnChangeEventPayload,
-} from "@codeherence/react-native-graph";
-import { LinearGradient, vec } from "@shopify/react-native-skia";
-import { useCallback, useMemo, useReducer } from "react";
-import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
-import { useAnimatedProps, useSharedValue } from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-import AnimatedText from "../components/AnimatedText";
-import aapl_prices from "../data/aapl_prices.json";
-import msft_prices from "../data/msft_prices.json";
-
-const formatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-});
-
-const AxisLabel: React.FC<AxisLabelComponentProps> = ({ value }) => (
-  <Text selectable={false}>{formatter.format(value)}</Text>
-);
-
-const uiFormatter = (price: number) => {
-  "worklet";
-
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(price);
-};
-
-const priceMap = {
-  msft: msft_prices.results
-    .reverse()
-    .map<[number, number]>((r) => [new Date(r.date).getTime(), r.close]),
-  aapl: aapl_prices.results
-    .reverse()
-    .map<[number, number]>((r) => [new Date(r.date).getTime(), r.close]),
-};
+import { useRouter } from "expo-router";
+import { Pressable, ScrollView, StyleSheet, Text } from "react-native";
 
 export default () => {
-  const [counter, increment] = useReducer((s: number) => s + 1, 0);
-
-  const { top, bottom, left, right } = useSafeAreaInsets();
-
-  const latestPrice = useSharedValue("0");
-  const symbol: "msft" | "aapl" = counter % 2 === 0 ? "msft" : "aapl";
-  const data: [number, number][] = useMemo(() => {
-    latestPrice.value = uiFormatter(priceMap[symbol][priceMap[symbol].length - 1]![1]);
-    return priceMap[symbol];
-  }, [symbol]);
-
-  const onHoverChangeWorklet = useCallback((evt: HoverGestureHandlerOnChangeEventPayload) => {
-    "worklet";
-    latestPrice.value = uiFormatter(evt.point);
-  }, []);
-
-  const onGestureChangeWorklet = useCallback((evt: PanGestureHandlerOnChangeEventPayload) => {
-    "worklet";
-    latestPrice.value = uiFormatter(evt.point);
-  }, []);
-
-  const onEndWorklet = useCallback(() => {
-    "worklet";
-    latestPrice.value = uiFormatter(data[data.length - 1]![1]);
-  }, [data]);
-
-  const animatedProps = useAnimatedProps(() => {
-    return { text: latestPrice.value };
-  }, []);
+  const { push } = useRouter();
 
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={{
-        paddingTop: top,
-        paddingBottom: bottom,
-        paddingLeft: left,
-        paddingRight: right,
-      }}
+      contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
-      <Button title={`Showing ${symbol}. Click to switch.`} onPress={increment} />
-      <AnimatedText style={styles.price} animatedProps={animatedProps} />
-      <LineChart
-        points={data}
-        style={styles.chart}
-        TopAxisLabel={AxisLabel}
-        BottomAxisLabel={AxisLabel}
-        onPanGestureChange={onGestureChangeWorklet}
-        onPanGestureEnd={onEndWorklet}
-        onHoverGestureEnd={onEndWorklet}
-        onHoverGestureChange={onHoverChangeWorklet}
-        strokeWidth={2}
-        PathFill={({ width }) => (
-          <LinearGradient
-            start={vec(0, 0)}
-            end={vec(width, 0)}
-            colors={["blue", "red", "purple"]}
-          />
-        )}
-      />
+      <Pressable onPress={() => push("/chart")}>
+        <Text style={styles.link}>Go to Charts</Text>
+      </Pressable>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  chart: { flex: 1, minHeight: 400 },
-  price: { fontSize: 32 },
+  contentContainer: {
+    flexGrow: 1,
+  },
+  link: {
+    color: "blue",
+    fontSize: 16,
+    textAlign: "center",
+    padding: 16,
+  },
 });

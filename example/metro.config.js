@@ -23,6 +23,7 @@ config.resolver.extraNodeModules = new Proxy(
 // excludes the one from the parent folder when bundling.
 
 const IGNORED_LIBS = [
+  "react-dom",
   "react-native",
   "@shopify/react-native-skia",
   "react-native-reanimated",
