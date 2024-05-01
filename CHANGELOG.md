@@ -1,5 +1,13 @@
 
 
+## [0.1.1-beta.0](https://github.com/codeherence/react-native-graph/compare/v0.1.0...v0.1.1-beta.0) (2024-05-01)
+
+
+### Bug Fixes
+
+* gesture firing on tap & example ([efee5a4](https://github.com/codeherence/react-native-graph/commit/efee5a46738c9c59332b0b0120aa8f1ecac207db))
+* y for x computation ([875d808](https://github.com/codeherence/react-native-graph/commit/875d8086734c4cbc30d86bc4e5aedde9d6a3105d))
+
 ## 0.1.0 (2024-03-12)
 
 
