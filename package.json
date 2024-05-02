@@ -1,6 +1,6 @@
 {
   "name": "@codeherence/react-native-graph",
-  "version": "0.1.1-beta.0",
+  "version": "0.1.1-beta.1",
   "description": "A graphing library for React Native built with Shopify's react-native-skia.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",

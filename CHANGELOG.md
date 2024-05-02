@@ -1,5 +1,12 @@
 
 
+## [0.1.1-beta.1](https://github.com/codeherence/react-native-graph/compare/v0.1.1-beta.0...v0.1.1-beta.1) (2024-05-02)
+
+
+### Features
+
+* add cursor customizations, more documentation, and batched updates ([5475301](https://github.com/codeherence/react-native-graph/commit/5475301a6be190b92b6fe99e3e32c92fab0fc817))
+
 ## [0.1.1-beta.0](https://github.com/codeherence/react-native-graph/compare/v0.1.0...v0.1.1-beta.0) (2024-05-01)
 
 
