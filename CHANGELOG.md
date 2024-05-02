@@ -1,5 +1,12 @@
 
 
+## [0.1.1-rc.0](https://github.com/codeherence/react-native-graph/compare/v0.1.1-beta.1...v0.1.1-rc.0) (2024-05-02)
+
+
+### Bug Fixes
+
+* scope.registerDeclaration type export warning ([65bb48a](https://github.com/codeherence/react-native-graph/commit/65bb48aabdffdbd27631a60e92cdc47838d716c6))
+
 ## [0.1.1-beta.1](https://github.com/codeherence/react-native-graph/compare/v0.1.1-beta.0...v0.1.1-beta.1) (2024-05-02)
 
 
