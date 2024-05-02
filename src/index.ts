@@ -1,7 +1,7 @@
 export {
   LineChart,
   type LineChartProps,
-  type AxisLabelComponentProps,
+  type AxisLabelProps,
   PanGestureHandlerOnBeginEventPayload,
   PanGestureHandlerOnChangeEventPayload,
   PanGestureHandlerEventPayload,

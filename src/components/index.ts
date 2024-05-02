@@ -2,7 +2,7 @@ export {
   LineChart,
   type LineChartProps,
   type PathFillProps,
-  type AxisLabelComponentProps,
+  type AxisLabelProps,
   // Gesture exports
   type PanGestureHandlerOnBeginEventPayload,
   type PanGestureHandlerEventPayload,

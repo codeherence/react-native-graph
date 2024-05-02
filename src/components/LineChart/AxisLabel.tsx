@@ -8,13 +8,17 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-export interface AxisLabelComponentProps {
+export interface AxisLabelProps {
+  /** The value that should be displayed as the label. */
   value: number;
 }
 
 interface AxisLabelContainerProps {
+  /** A label component to be displayed. */
   children: React.ReactNode;
+  /** The x position of the label. */
   x: number;
+  /** The width of the root container. */
   containerWidth: number;
 }
 

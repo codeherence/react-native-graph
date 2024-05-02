@@ -1,5 +1,5 @@
 import {
-  type AxisLabelComponentProps,
+  type AxisLabelProps,
   LineChart,
   type PanGestureHandlerOnChangeEventPayload,
   HoverGestureHandlerOnChangeEventPayload,
@@ -21,7 +21,7 @@ const formatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
 });
 
-const AxisLabel: React.FC<AxisLabelComponentProps> = ({ value }) => (
+const AxisLabel: React.FC<AxisLabelProps> = ({ value }) => (
   <Text selectable={false}>{formatter.format(value)}</Text>
 );
 

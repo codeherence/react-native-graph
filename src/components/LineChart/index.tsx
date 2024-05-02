@@ -4,7 +4,7 @@ import { LayoutChangeEvent, StyleSheet, View, ViewProps } from "react-native";
 import { GestureDetector } from "react-native-gesture-handler";
 import { useSharedValue } from "react-native-reanimated";
 
-import { AxisLabelComponentProps, AxisLabelContainer } from "./AxisLabel";
+import { AxisLabelProps, AxisLabelContainer } from "./AxisLabel";
 import { Cursor } from "./Cursor";
 import { computePath, type ComputePathProps, computeGraphData } from "./computations";
 import {
@@ -79,7 +79,7 @@ interface LineChartProps extends ViewProps {
    * @note This compnent should not be a Skia component since it is not rendered
    * in the Canvas.
    */
-  TopAxisLabel?: React.FC<AxisLabelComponentProps>;
+  TopAxisLabel?: React.FC<AxisLabelProps>;
   /**
    * The component to render as the bottom axis label.
    * @default null
@@ -87,7 +87,7 @@ interface LineChartProps extends ViewProps {
    * @note This compnent should not be a Skia component since it is not rendered
    * in the Canvas.
    */
-  BottomAxisLabel?: React.FC<AxisLabelComponentProps>;
+  BottomAxisLabel?: React.FC<AxisLabelProps>;
   /**
    * The type of curve to use for the line chart. Currently, only "linear" is supported.
    *
@@ -271,7 +271,7 @@ export {
   LineChart,
   type LineChartProps,
   type PathFillProps,
-  type AxisLabelComponentProps,
+  type AxisLabelProps,
   // Gesture exports
   type PanGestureHandlerOnBeginEventPayload,
   type PanGestureHandlerEventPayload,
