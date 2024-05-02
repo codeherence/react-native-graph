@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useCallback, useState } from "react";
 import { LayoutChangeEvent, StyleSheet, View } from "react-native";
-import Reanimated, {
+import Animated, {
   clamp,
   useAnimatedStyle,
   useDerivedValue,
@@ -33,21 +33,18 @@ export const AxisLabelContainer: React.FC<AxisLabelContainerProps> = ({
     const halfWidth = Math.round(width / 2);
     const minX = 0;
     const maxX = containerWidth - width;
-
     return withTiming(clamp(x - halfWidth, minX, maxX));
   }, [x, containerWidth, width]);
 
   const transform = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateX: translateX.value }],
-    };
+    return { transform: [{ translateX: translateX.value }] };
   });
 
   return (
     <View style={styles.container}>
-      <Reanimated.View style={[styles.child, transform]} onLayout={onLayout}>
+      <Animated.View style={[styles.child, transform]} onLayout={onLayout}>
         {children}
-      </Reanimated.View>
+      </Animated.View>
     </View>
   );
 };

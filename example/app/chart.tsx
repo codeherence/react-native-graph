@@ -4,7 +4,7 @@ import {
   type PanGestureHandlerOnChangeEventPayload,
   HoverGestureHandlerOnChangeEventPayload,
 } from "@codeherence/react-native-graph";
-import { LinearGradient, vec } from "@shopify/react-native-skia";
+import { Paint } from "@shopify/react-native-skia";
 import { useCallback, useMemo, useReducer } from "react";
 import { Button, ScrollView, StyleSheet, Text } from "react-native";
 import { useAnimatedProps, useSharedValue } from "react-native-reanimated";
@@ -35,7 +35,7 @@ const uiFormatter = (price: number) => {
 };
 
 const priceMap = {
-  msft: msft_prices.results
+  msft: [...msft_prices.results]
     .reverse()
     .map<[number, number]>((r) => [new Date(r.date).getTime(), r.close]),
   aapl: aapl_prices.results
@@ -52,9 +52,9 @@ const priceMap = {
 const priceMapKeys = Object.keys(priceMap) as (keyof typeof priceMap)[];
 
 export default () => {
-  const [counter, increment] = useReducer((s: number) => s + 1, 0);
-
   const { bottom, left, right } = useSafeAreaInsets();
+
+  const [counter, increment] = useReducer((s: number) => s + 1, 0);
 
   const latestPrice = useSharedValue("0");
   const symbol = priceMapKeys[counter % priceMapKeys.length]!;
@@ -85,18 +85,24 @@ export default () => {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={{
-        paddingBottom: bottom,
-        paddingLeft: left,
-        paddingRight: right,
-      }}
+      contentContainerStyle={[
+        styles.contentContainer,
+        {
+          paddingBottom: bottom,
+          paddingLeft: left,
+          paddingRight: right,
+        },
+      ]}
       showsVerticalScrollIndicator={false}
     >
-      <Button title={`Showing ${symbol}. Click to switch.`} onPress={increment} />
+      <Button title={`Showing ${symbol}. Press to switch.`} onPress={increment} />
       <AnimatedText style={styles.price} animatedProps={animatedProps} />
       <LineChart
         points={data}
         style={styles.chart}
+        cursorColor="#000"
+        cursorLineColor="#000"
+        cursorLineWidth={1}
         TopAxisLabel={AxisLabel}
         BottomAxisLabel={AxisLabel}
         onPanGestureChange={onGestureChangeWorklet}
@@ -104,12 +110,8 @@ export default () => {
         onHoverGestureEnd={onEndWorklet}
         onHoverGestureChange={onHoverChangeWorklet}
         strokeWidth={2}
-        PathFill={({ width }) => (
-          <LinearGradient
-            start={vec(0, 0)}
-            end={vec(width, 0)}
-            colors={["blue", "red", "purple"]}
-          />
+        PathFill={({ strokeWidth }) => (
+          <Paint style="stroke" strokeWidth={strokeWidth} color="lightblue" />
         )}
       />
     </ScrollView>
@@ -118,6 +120,7 @@ export default () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  chart: { flex: 1, minHeight: 400 },
+  contentContainer: { flexGrow: 1 },
+  chart: { flex: 1, maxHeight: 300 },
   price: { fontSize: 32 },
 });

@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text } from "react-native";
 
 export default () => {
-  const { push } = useRouter();
+  const { navigate } = useRouter();
 
   return (
     <ScrollView
@@ -10,7 +10,7 @@ export default () => {
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
-      <Pressable onPress={() => push("/chart")}>
+      <Pressable onPress={() => navigate("/chart")}>
         <Text style={styles.link}>Go to Charts</Text>
       </Pressable>
     </ScrollView>

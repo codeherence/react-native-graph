@@ -10,7 +10,6 @@ interface RoundProps {
 
 const round = ({ value, precision = 0 }: RoundProps): number => {
   "worklet";
-
   const p = Math.pow(10, precision);
   return Math.round(value * p) / p;
 };
@@ -23,7 +22,6 @@ interface LinearYForXProps {
 
 const linearYForX = ({ path, x, precision = 2 }: LinearYForXProps): number => {
   "worklet";
-
   const cmds = path.toCmds();
   let from: Vector = vec(0, 0);
   let found = false;
@@ -33,8 +31,10 @@ const linearYForX = ({ path, x, precision = 2 }: LinearYForXProps): number => {
     const cmd = cmds[i];
     if (cmd == null) break;
     if (cmd[0] === PathVerb.Move) {
+      // If the path starts with a move command, set the from point
       from = vec(cmd[1], cmd[2]);
     } else if (cmd[0] === PathVerb.Line) {
+      // If the path contains a line command, check if the x value is within the bounds of the line
       const to = vec(cmd[1], cmd[2]);
       if ((x >= from.x && x <= to.x) || (x <= from.x && x >= to.x)) {
         const t = (x - from.x) / (to.x - from.x);
@@ -84,7 +84,6 @@ export const computePath = ({
   curveType,
 }: ComputePathProps): SkPath => {
   "worklet";
-
   const straightLine = Skia.Path.Make()
     .moveTo(0, height / 2)
     .lineTo(width, height / 2);

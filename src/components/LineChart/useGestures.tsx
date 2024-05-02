@@ -40,14 +40,22 @@ export type HoverGestureOnEndCallBack = Parameters<HoverGestureOnEnd>[0];
 export type HoverGestureHandlerOnEndEventPayload = Parameters<HoverGestureOnEndCallBack>[0];
 
 export interface UseGestureProps {
+  /** The x position of the cursor. */
   x: SharedValue<number>;
+  /** The y position of the cursor. */
   y: SharedValue<number>;
+  /** The path of the chart. */
   path: SkPath;
+  /** The height of the chart. */
   height: number;
-  minValue: number;
-  maxValue: number;
+  /** The minimum value of the y axis. */
+  minYValue: number;
+  /** The maximum value of the y axis. */
+  maxYValue: number;
+  /** The radius of the cursor. */
   cursorRadius: number;
-  /** Callback when the pan gesture begins. This function must be a worklet function. */
+  /** The precision of the y value. */
+  precision: number;
   onPanGestureBegin: ((payload: PanGestureHandlerOnBeginEventPayload) => void) | null;
   onPanGestureChange: ((payload: PanGestureHandlerOnChangeEventPayload) => void) | null;
   onPanGestureEnd: ((payload: PanGestureHandlerEventPayload) => void) | null;
@@ -58,7 +66,8 @@ export interface UseGestureProps {
 
 /**
  * Returns the gesture handlers for the LineChart component.
- * @param param0 - The props to allow the gesture handlers to interact with the LineChart component.
+ * @param param0 - The props to allow the gesture handlers to interact with the
+ * LineChart component.
  * @returns The gesture handlers for the LineChart component.
  */
 export const useGestures = ({
@@ -66,9 +75,10 @@ export const useGestures = ({
   y,
   path,
   height,
-  minValue,
-  maxValue,
+  minYValue,
+  maxYValue,
   cursorRadius,
+  precision,
   onPanGestureBegin,
   onPanGestureChange,
   onPanGestureEnd,
@@ -80,21 +90,21 @@ export const useGestures = ({
     .activeOffsetX([-5, 5])
     .onStart((event) => {
       x.value = event.x;
-      y.value = getYForX({ path, x: event.x });
+      y.value = getYForX({ path, x: event.x, precision });
       const point = interpolate(
         y.value,
         [cursorRadius, height - cursorRadius],
-        [maxValue, minValue]
+        [maxYValue, minYValue]
       );
       if (onPanGestureBegin) onPanGestureBegin({ event, point });
     })
     .onChange((event) => {
       x.value = event.x;
-      y.value = getYForX({ path, x: event.x });
+      y.value = getYForX({ path, x: event.x, precision });
       const point = interpolate(
         y.value,
         [cursorRadius, height - cursorRadius],
-        [maxValue, minValue]
+        [maxYValue, minYValue]
       );
       if (onPanGestureChange) onPanGestureChange({ event, point });
     })
@@ -106,21 +116,21 @@ export const useGestures = ({
   const hoverGesture = Gesture.Hover()
     .onStart((event) => {
       x.value = event.x;
-      y.value = getYForX({ path, x: event.x });
+      y.value = getYForX({ path, x: event.x, precision });
       const point = interpolate(
         y.value,
         [cursorRadius, height - cursorRadius],
-        [maxValue, minValue]
+        [maxYValue, minYValue]
       );
       if (onHoverGestureBegin) onHoverGestureBegin({ event, point });
     })
     .onChange((event) => {
       x.value = event.x;
-      y.value = getYForX({ path, x: event.x });
+      y.value = getYForX({ path, x: event.x, precision });
       const point = interpolate(
         y.value,
         [cursorRadius, height - cursorRadius],
-        [maxValue, minValue]
+        [maxYValue, minYValue]
       );
       if (onHoverGestureChange) onHoverGestureChange({ event, point });
     })
@@ -129,7 +139,8 @@ export const useGestures = ({
       if (onHoverGestureEnd) onHoverGestureEnd(event);
     });
 
-  // We return a composed gesture that listens to both pan and hover gestures. This is to
-  // allow the chart component to work on both touch and mouse devices.
+  // We return a composed gesture that listens to both pan and hover gestures.
+  // This is to allow the chart component to work on both touch and mouse
+  // devices (i.e., iOS, Android, and Web).
   return Gesture.Race(hoverGesture, panGesture);
 };
