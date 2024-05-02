@@ -27,7 +27,7 @@ interface PathFillProps {
   width: number;
 }
 
-interface LineChartProps extends ViewProps {
+export interface LineChartProps extends ViewProps {
   /**
    * Array of [x, y] points for the chart.
    */
@@ -161,7 +161,7 @@ interface LineChartProps extends ViewProps {
   onHoverGestureEnd?: ((payload: HoverGestureHandlerOnEndEventPayload) => void) | null;
 }
 
-const LineChart: React.FC<LineChartProps> = ({
+export const LineChart: React.FC<LineChartProps> = ({
   points = [],
   precision = 2,
   strokeWidth = 2,
@@ -266,17 +266,3 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   canvas: { flex: 1 },
 });
-
-export {
-  LineChart,
-  type LineChartProps,
-  type PathFillProps,
-  type AxisLabelProps,
-  // Gesture exports
-  type PanGestureHandlerOnBeginEventPayload,
-  type PanGestureHandlerEventPayload,
-  type PanGestureHandlerOnChangeEventPayload,
-  type HoverGestureHandlerOnBeginEventPayload,
-  type HoverGestureHandlerOnChangeEventPayload,
-  type HoverGestureHandlerOnEndEventPayload,
-};

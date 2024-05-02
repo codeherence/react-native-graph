@@ -1,13 +1,10 @@
-export {
-  LineChart,
-  type LineChartProps,
-  type PathFillProps,
-  type AxisLabelProps,
-  // Gesture exports
-  type PanGestureHandlerOnBeginEventPayload,
-  type PanGestureHandlerEventPayload,
-  type PanGestureHandlerOnChangeEventPayload,
-  type HoverGestureHandlerOnBeginEventPayload,
-  type HoverGestureHandlerOnChangeEventPayload,
-  type HoverGestureHandlerOnEndEventPayload,
-} from "./LineChart";
+export { LineChart, type LineChartProps } from "./LineChart";
+export type { AxisLabelProps } from "./LineChart/AxisLabel";
+export type {
+  PanGestureHandlerOnBeginEventPayload,
+  PanGestureHandlerOnChangeEventPayload,
+  PanGestureHandlerEventPayload,
+  HoverGestureHandlerOnBeginEventPayload,
+  HoverGestureHandlerOnChangeEventPayload,
+  HoverGestureHandlerOnEndEventPayload,
+} from "./LineChart/useGestures";

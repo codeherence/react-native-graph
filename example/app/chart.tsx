@@ -2,7 +2,7 @@ import {
   type AxisLabelProps,
   LineChart,
   type PanGestureHandlerOnChangeEventPayload,
-  HoverGestureHandlerOnChangeEventPayload,
+  type HoverGestureHandlerOnChangeEventPayload,
 } from "@codeherence/react-native-graph";
 import { Paint } from "@shopify/react-native-skia";
 import { useCallback, useMemo, useReducer } from "react";
