@@ -16,7 +16,7 @@ import {
   PanGestureHandlerOnChangeEventPayload,
   useGestures,
 } from "./useGestures";
-import { batchedUpdates } from "../../lib/batchedUpdates";
+import { batchedUpdates } from "../../libs/batchedUpdates";
 
 interface PathFillProps {
   /* The width of the line */
