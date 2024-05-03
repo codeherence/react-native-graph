@@ -1,5 +1,12 @@
 
 
+## [0.1.1-rc.2](https://github.com/codeherence/react-native-graph/compare/v0.1.1-rc.1...v0.1.1-rc.2) (2024-05-03)
+
+
+### Bug Fixes
+
+* web builds ([92e8253](https://github.com/codeherence/react-native-graph/commit/92e825375922a3acf6d6dc8a29c7f9e7873a156b))
+
 ## [0.1.1-rc.1](https://github.com/codeherence/react-native-graph/compare/v0.1.1-rc.0...v0.1.1-rc.1) (2024-05-03)
 
 
