@@ -1,5 +1,13 @@
 
 
+## [0.1.1-rc.1](https://github.com/codeherence/react-native-graph/compare/v0.1.1-rc.0...v0.1.1-rc.1) (2024-05-03)
+
+
+### Bug Fixes
+
+* ignored lib folder in subdirectory ([44b4164](https://github.com/codeherence/react-native-graph/commit/44b41641a051489c182f77687b6146b57dc50952))
+* react missing from context bug and config ([85606e7](https://github.com/codeherence/react-native-graph/commit/85606e72719fa92d6d46512eca4be15b61a5fe11))
+
 ## [0.1.1-rc.0](https://github.com/codeherence/react-native-graph/compare/v0.1.1-beta.1...v0.1.1-rc.0) (2024-05-02)
 
 
