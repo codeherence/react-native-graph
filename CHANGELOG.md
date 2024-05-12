@@ -1,5 +1,12 @@
 
 
+## [0.2.0](https://github.com/codeherence/react-native-graph/compare/v0.1.1-rc.2...v0.2.0) (2024-05-12)
+
+
+### Features
+
+* introduce static line chart ([40ebc4d](https://github.com/codeherence/react-native-graph/commit/40ebc4dfa514785b30c7c8e31f2737a7d82fc100))
+
 ## [0.1.1-rc.2](https://github.com/codeherence/react-native-graph/compare/v0.1.1-rc.1...v0.1.1-rc.2) (2024-05-03)
 
 
