@@ -1,4 +1,9 @@
-export { LineChart, type LineChartProps } from "./LineChart";
+export {
+  LineChart,
+  type LineChartProps,
+  type InteractiveLineChartProps,
+  type PathFillProps,
+} from "./LineChart/LineChart";
 export type { AxisLabelProps } from "./LineChart/AxisLabel";
 export type {
   PanGestureHandlerOnBeginEventPayload,

@@ -11,10 +11,7 @@ import { useAnimatedProps, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import AnimatedText from "../components/AnimatedText";
-import aapl_prices from "../data/aapl_prices.json";
-import msft_prices from "../data/msft_prices.json";
-import nvda_prices from "../data/nvda_prices.json";
-import unity_prices from "../data/unity_prices.json";
+import { priceMap } from "../src/store/prices";
 
 const formatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -32,21 +29,6 @@ const uiFormatter = (price: number) => {
     style: "currency",
     currency: "USD",
   }).format(price);
-};
-
-const priceMap = {
-  msft: [...msft_prices.results]
-    .reverse()
-    .map<[number, number]>((r) => [new Date(r.date).getTime(), r.close]),
-  aapl: aapl_prices.results
-    .reverse()
-    .map<[number, number]>((r) => [new Date(r.date).getTime(), r.close]),
-  nvda: nvda_prices.results
-    .reverse()
-    .map<[number, number]>((r) => [new Date(r.date).getTime(), r.close]),
-  unity: unity_prices.results
-    .reverse()
-    .map<[number, number]>((r) => [new Date(r.date).getTime(), r.close]),
 };
 
 const priceMapKeys = Object.keys(priceMap) as (keyof typeof priceMap)[];

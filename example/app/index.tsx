@@ -11,7 +11,10 @@ export default () => {
       showsVerticalScrollIndicator={false}
     >
       <Pressable onPress={() => navigate("/chart")}>
-        <Text style={styles.link}>Go to Charts</Text>
+        <Text style={styles.link}>Go to interactive chart</Text>
+      </Pressable>
+      <Pressable onPress={() => navigate("/static_chart")}>
+        <Text style={styles.link}>Go to static chart</Text>
       </Pressable>
     </ScrollView>
   );

@@ -1,3 +1,8 @@
 {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    // Fix all errors
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "always"
+    },
+    
 }
