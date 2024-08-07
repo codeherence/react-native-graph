@@ -4,6 +4,8 @@ export {
   type InteractiveLineChartProps,
   type PathFillProps,
 } from "./LineChart/LineChart";
+export { MultiLineChart, type MultiLineChartProps } from "./MultiLineChart/MultiLineChart";
+export { Line } from "./MultiLineChart/Line";
 export type { AxisLabelProps } from "./LineChart/AxisLabel";
 export type {
   PanGestureHandlerOnBeginEventPayload,

@@ -10,6 +10,7 @@ export default () => (
     <Stack>
       <Stack.Screen name="index" />
       <Stack.Screen name="chart" />
+      <Stack.Screen name="multi_line_chart" />
     </Stack>
   </GestureHandlerRootView>
 );

@@ -83,6 +83,8 @@ PODS:
     - ExpoModulesCore
   - ExpoFileSystem (16.0.7):
     - ExpoModulesCore
+  - ExpoHaptics (12.8.1):
+    - ExpoModulesCore
   - ExpoHead (3.4.8):
     - ExpoModulesCore
   - ExpoImage (1.10.6):
@@ -1231,6 +1233,7 @@ DEPENDENCIES:
   - ExpoBlur (from `../node_modules/expo-blur/ios`)
   - ExpoCrypto (from `../node_modules/expo-crypto/ios`)
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
+  - ExpoHaptics (from `../node_modules/expo-haptics/ios`)
   - ExpoHead (from `../node_modules/expo-router/ios`)
   - ExpoImage (from `../node_modules/expo-image/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
@@ -1336,6 +1339,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-crypto/ios"
   ExpoFileSystem:
     :path: "../node_modules/expo-file-system/ios"
+  ExpoHaptics:
+    :path: "../node_modules/expo-haptics/ios"
   ExpoHead:
     :path: "../node_modules/expo-router/ios"
   ExpoImage:
@@ -1469,6 +1474,7 @@ SPEC CHECKSUMS:
   ExpoBlur: e832d874bd94afc0645daddbd3162ec1ce172080
   ExpoCrypto: b6428f48599c007676dc81a9b5f72c07e62fdccc
   ExpoFileSystem: c7488590959bf85ebc114909eb8186cbd62e3a25
+  ExpoHaptics: 28a771b630353cd6e8dcf1b1e3e693e38ad7c3c3
   ExpoHead: 8224345e80abcf4c97b31c99805dd5a3c8d3404d
   ExpoImage: 8cf2d51de3d03b7e984e9b0ba8f19c0c22057001
   ExpoKeepAwake: 0f5cad99603a3268e50af9a6eb8b76d0d9ac956c
