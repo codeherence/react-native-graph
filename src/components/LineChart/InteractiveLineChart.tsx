@@ -9,7 +9,6 @@ import { Cursor } from "./Cursor";
 import { LineChartProps } from "./LineChart";
 import { computePath, computeGraphData } from "./computations";
 import { useGestures } from "./useGestures";
-import { batchedUpdates } from "../../libs/batchedUpdates";
 
 export const InteractiveLineChart: React.FC<LineChartProps<false>> = ({
   points = [],
@@ -33,8 +32,7 @@ export const InteractiveLineChart: React.FC<LineChartProps<false>> = ({
   onHoverGestureEnd = null,
   ...viewProps
 }) => {
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
+  const [{ width, height }, setSize] = useState({ width: 0, height: 0 });
 
   // Initially -cursorRadius so that the cursor is hidden
   const x = useSharedValue(-cursorRadius);
@@ -67,10 +65,7 @@ export const InteractiveLineChart: React.FC<LineChartProps<false>> = ({
 
   const onLayout = useCallback((e: LayoutChangeEvent) => {
     // Batch the updates to avoid unnecessary re-renders
-    batchedUpdates(() => {
-      setWidth(e.nativeEvent.layout.width);
-      setHeight(e.nativeEvent.layout.height);
-    });
+    setSize(e.nativeEvent.layout);
   }, []);
 
   return (

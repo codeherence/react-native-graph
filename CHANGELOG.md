@@ -1,5 +1,12 @@
 
 
+## [0.3.0](https://github.com/codeherence/react-native-graph/compare/v0.2.0...v0.3.0) (2024-08-08)
+
+
+### Features
+
+* introduce multiline chart ([ac12f01](https://github.com/codeherence/react-native-graph/commit/ac12f0129799b55955b9ec0b25ad605eb35397c8))
+
 ## [0.2.0](https://github.com/codeherence/react-native-graph/compare/v0.1.1-rc.2...v0.2.0) (2024-05-12)
 
 
