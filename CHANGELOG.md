@@ -1,5 +1,12 @@
 
 
+## [0.4.0](https://github.com/codeherence/react-native-graph/compare/v0.3.0...v0.4.0) (2024-10-06)
+
+
+### Features
+
+* introduce deterministic pan ([2b6ab69](https://github.com/codeherence/react-native-graph/commit/2b6ab699ff4c46b32b4f85c4356042292500974d))
+
 ## [0.3.0](https://github.com/codeherence/react-native-graph/compare/v0.2.0...v0.3.0) (2024-08-08)
 
 
