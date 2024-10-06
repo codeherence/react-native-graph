@@ -37,7 +37,6 @@ export const InteractiveMultiLineChart = <Data extends Record<string, [number, n
   const gestures = useGestures({
     points,
     height,
-    precision: 2,
     gestureLongPressDelay,
     onPanGestureBegin,
     onPanGestureChange,

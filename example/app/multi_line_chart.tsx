@@ -12,16 +12,23 @@ const gestureStartImpact = () => {
 };
 
 export default () => {
-  const cursorShown = useSharedValue(false);
-  const x = useSharedValue(0);
-  const y = useSharedValue(0);
   const { bottom, left, right } = useSafeAreaInsets();
 
+  const cursorShown = useSharedValue(false);
   const opacity = useDerivedValue(() => {
     // return cursorShown.value ? 1 : 0;
     // Use a timing function to animate the opacity
     return withTiming(cursorShown.value ? 1 : 0, { duration: 200 });
   });
+
+  const msftX = useSharedValue(0);
+  const msftY = useSharedValue(0);
+  const aaplX = useSharedValue(0);
+  const aaplY = useSharedValue(0);
+  const nvdaX = useSharedValue(0);
+  const nvdaY = useSharedValue(0);
+  const unityX = useSharedValue(0);
+  const unityY = useSharedValue(0);
 
   return (
     <ScrollView
@@ -40,18 +47,27 @@ export default () => {
         isStatic={false}
         points={priceMap}
         style={styles.chart}
-        // ExtraCanvasElements={
-        //   <>
-        //     <Group color="blue" opacity={opacity}>
-        //       <Circle cx={x} cy={y} r={10} />
-        //     </Group>
-        //   </>
-        // }
+        ExtraCanvasElements={
+          <>
+            <Group opacity={opacity}>
+              <Circle cx={msftX} cy={msftY} r={4} color="purple" />
+              <Circle cx={aaplX} cy={aaplY} r={4} color="green" />
+              <Circle cx={nvdaX} cy={nvdaY} r={4} color="black" />
+              <Circle cx={unityX} cy={unityY} r={4} color="orange" />
+            </Group>
+          </>
+        }
         onPanGestureBegin={(payload) => {
           "worklet";
           cursorShown.value = true;
-          x.value = payload.event.x;
-          y.value = payload.event.y;
+          msftX.value = payload.points.msft.x;
+          msftY.value = payload.points.msft.y;
+          aaplX.value = payload.points.aapl.x;
+          aaplY.value = payload.points.aapl.y;
+          nvdaX.value = payload.points.nvda.x;
+          nvdaY.value = payload.points.nvda.y;
+          unityX.value = payload.points.unity.x;
+          unityY.value = payload.points.unity.y;
           runOnJS(gestureStartImpact)();
         }}
         onPanGestureEnd={() => {
@@ -60,8 +76,14 @@ export default () => {
         }}
         onPanGestureChange={(payload) => {
           "worklet";
-          x.value = payload.event.x;
-          y.value = payload.event.y;
+          msftX.value = payload.points.msft.x;
+          msftY.value = payload.points.msft.y;
+          aaplX.value = payload.points.aapl.x;
+          aaplY.value = payload.points.aapl.y;
+          nvdaX.value = payload.points.nvda.x;
+          nvdaY.value = payload.points.nvda.y;
+          unityX.value = payload.points.unity.x;
+          unityY.value = payload.points.unity.y;
         }}
       >
         {(args) => (

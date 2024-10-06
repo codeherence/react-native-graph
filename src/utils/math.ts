@@ -3,31 +3,36 @@ import { PathVerb, Skia, vec } from "@shopify/react-native-skia";
 import { scaleSqrt, scaleTime } from "d3";
 import { CurveFactory, curveLinear, line } from "d3-shape";
 
-interface RoundProps {
-  value: number;
-  precision?: number;
-}
-
-const round = ({ value, precision = 0 }: RoundProps): number => {
+/**
+ * Rounds a number to a specified precision.
+ *
+ * @param value The value to round
+ * @param precision The precision to round the value to. Defaults to 15.
+ * @returns The rounded value
+ */
+export const round = (value: number, precision: number = 15): number => {
   "worklet";
   const p = Math.pow(10, precision);
   return Math.round(value * p) / p;
 };
 
-interface LinearYForXProps {
-  path: SkPath;
-  x: number;
-  precision?: number;
-}
-
-const linearYForX = ({ path, x, precision = 2 }: LinearYForXProps): number => {
+/**
+ * Given a linear path and x value, computes the:
+ *  1. real x value on the path closest to the input x value
+ *  2. real y value on the path closest to the input x value
+ *  3. index of the x value in the path
+ *
+ * @param path The path to process. This path must have been created using a linear curve.
+ * @param x The x value being evaluated. This is the raw x value of the gesture.
+ * @returns A tuple containing the x, y, and index values
+ */
+const linearYForX = (path: SkPath, x: number): [number, number, number] => {
   "worklet";
   const cmds = path.toCmds();
   let from: Vector = vec(0, 0);
-  let found = false;
-  let yValue = 0;
+  let dataIndex = 0;
 
-  for (let i = 0; i < cmds.length; i++) {
+  for (let i = 0; i < cmds.length; ++i) {
     const cmd = cmds[i];
     if (cmd == null) break;
     if (cmd[0] === PathVerb.Move) {
@@ -37,27 +42,30 @@ const linearYForX = ({ path, x, precision = 2 }: LinearYForXProps): number => {
       // If the path contains a line command, check if the x value is within the bounds of the line
       const to = vec(cmd[1], cmd[2]);
       if ((x >= from.x && x <= to.x) || (x <= from.x && x >= to.x)) {
-        const t = (x - from.x) / (to.x - from.x);
-        yValue = from.y + t * (to.y - from.y);
-        found = true;
-        break;
+        // If x is closer to left point, use left point's y value, otherwise use right point's y value
+        const closerToLeft = Math.abs(x - from.x) < Math.abs(x - to.x);
+        const xValue = closerToLeft ? from.x : to.x;
+        const yValue = closerToLeft ? from.y : to.y;
+        return [round(xValue, 15), round(yValue, 15), closerToLeft ? dataIndex : dataIndex + 1];
       }
       from = to;
+      ++dataIndex;
     }
   }
 
-  return found ? round({ value: yValue, precision }) : 0;
+  return [0, 0, 0];
 };
 
-export interface GetYForXProps {
-  path: SkPath;
-  x: number;
-  precision?: number;
-}
-
-export const getYForX = ({ path, x, precision = 2 }: GetYForXProps): number => {
+/**
+ * Given a path and an x value, gets the closest x and y values on the path for the x value, and
+ * the index of the x value in the path.
+ * @param path The path to get the x and y values from
+ * @param x The raw x value of the gesture
+ * @returns A tuple containing the x, y, and index values
+ */
+export const getClosestPointForX = (path: SkPath, x: number) => {
   "worklet";
-  return linearYForX({ path, x, precision });
+  return linearYForX(path, x);
 };
 
 export interface ComputePathProps {
@@ -72,6 +80,12 @@ export interface ComputePathProps {
   curveType: "linear";
 }
 
+/**
+ * Computes the path of the chart based on the points array. If the points array is empty, a
+ * horizontal straight line across the center of the chart is returned.
+ * @param param0
+ * @returns
+ */
 export const computePath = ({
   width,
   height,
@@ -81,23 +95,19 @@ export const computePath = ({
   maxTimestamp,
   minValue,
   maxValue,
-  curveType,
 }: ComputePathProps): SkPath => {
   "worklet";
 
   const straightLine = Skia.Path.Make()
     .moveTo(0, height / 2)
     .lineTo(width, height / 2);
-
-  // If the dates array is empty, return a Path as a horizontal straight line
-  // in the center of the chart
-  if (points.length === 0) return straightLine;
+  if (points.length === 0) return straightLine; // No data, return a straight line
 
   const scaleX = scaleTime().domain([minTimestamp, maxTimestamp]).range([0, width]);
   const scaleY = scaleSqrt()
     .domain([minValue, maxValue])
     .range([height - cursorRadius, cursorRadius]);
-  const curve: CurveFactory = curveType === "linear" ? curveLinear : curveLinear;
+  const curve: CurveFactory = curveLinear;
   const rawPath = line()
     .x(([x]) => scaleX(x))
     .y(([, y]) => scaleY(y))
@@ -107,15 +117,11 @@ export const computePath = ({
   return Skia.Path.MakeFromSVGString(rawPath) ?? straightLine;
 };
 
-interface GetMinValueProps {
-  points: [number, number][];
-}
-
 /**
  * Get the index and value of the minimum value in the points array
  * @returns The index and value of the minimum value in the points array
  */
-const getMinValue = ({ points }: GetMinValueProps): [number, number] => {
+const getMinValue = (points: [number, number][]): [number, number] => {
   if (points.length === 0) return [0, 0];
 
   return points.reduce<[number, number]>(
@@ -127,15 +133,11 @@ const getMinValue = ({ points }: GetMinValueProps): [number, number] => {
   );
 };
 
-interface GetMaxValueProps {
-  points: [number, number][];
-}
-
 /**
  * Get the index and value of the maximum value in the points array
  * @returns The index and value of the maximum value in the points array
  */
-const getMaxValue = ({ points }: GetMaxValueProps): [number, number] => {
+const getMaxValue = (points: [number, number][]): [number, number] => {
   if (points.length === 0) return [0, 0];
 
   return points.reduce<[number, number]>(
@@ -147,6 +149,12 @@ const getMaxValue = ({ points }: GetMaxValueProps): [number, number] => {
   );
 };
 
+/**
+ * Computes the data needed to render the graph.
+ *
+ * @param points The points to render on the graph
+ * @returns The data used by the graph
+ */
 export const computeGraphData = (points: [number, number][]) => {
   "worklet";
 
@@ -167,8 +175,8 @@ export const computeGraphData = (points: [number, number][]) => {
   const timestamps = points.map(([timestamp]) => timestamp);
   const minTimestamp = Math.min(...timestamps);
   const maxTimestamp = Math.max(...timestamps);
-  const [minValueIndex, minValue] = getMinValue({ points });
-  const [maxValueIndex, maxValue] = getMaxValue({ points });
+  const [minValueIndex, minValue] = getMinValue(points);
+  const [maxValueIndex, maxValue] = getMaxValue(points);
 
   // We subtract 1 since the index is 0-based
   const minValueXProportion = minValueIndex / (points.length - 1);

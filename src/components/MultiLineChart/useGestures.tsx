@@ -5,20 +5,68 @@ import {
   type PanGestureHandlerEventPayload as ReanimatedPanGestureHandlerEventPayload,
   type PanGestureChangeEventPayload,
 } from "react-native-gesture-handler";
-import { interpolate, useSharedValue } from "react-native-reanimated";
+import { useSharedValue } from "react-native-reanimated";
 
 import { useMultiLineChartContext } from "./context";
-import { computeGraphData, computePath, getYForX } from "../../utils/math";
+import { computeGraphData, computePath, getClosestPointForX } from "../../utils/math";
 
 export type PanGestureHandlerEventPayload = ReanimatedPanGestureHandlerEventPayload;
 export type PanGestureHandlerOnBeginEventPayload<Data extends Record<string, [number, number][]>> =
   {
-    points: Record<keyof Data, number>;
+    points: Record<
+      keyof Data,
+      {
+        /**
+         * The raw x value of the cursor. Keep in mind that this chooses the closest valid x
+         * value - interpolation is not used.
+         */
+        x: number;
+        /**
+         * The raw y value of the cursor. This is chosen based on the x value and the generated
+         * path.
+         */
+        y: number;
+        /**
+         * The x-data value corresponding to the cursor. This is the actual x value of the data
+         * point.
+         */
+        xData: number;
+        /**
+         * The y-data value corresponding to the cursor. This is the actual y value of the data
+         * point.
+         */
+        yData: number;
+      }
+    >;
     event: PanGestureHandlerEventPayload;
   };
 export type PanGestureHandlerOnChangeEventPayload<Data extends Record<string, [number, number][]>> =
   {
-    points: Record<keyof Data, number>;
+    points: Record<
+      keyof Data,
+      {
+        /**
+         * The raw x value of the cursor. Keep in mind that this chooses the closest valid x
+         * value - interpolation is not used.
+         */
+        x: number;
+        /**
+         * The raw y value of the cursor. This is chosen based on the x value and the generated
+         * path.
+         */
+        y: number;
+        /**
+         * The x-data value corresponding to the cursor. This is the actual x value of the data
+         * point.
+         */
+        xData: number;
+        /**
+         * The y-data value corresponding to the cursor. This is the actual y value of the data
+         * point.
+         */
+        yData: number;
+      }
+    >;
     event: PanGestureHandlerEventPayload & PanGestureChangeEventPayload;
   };
 
@@ -35,8 +83,6 @@ export type UseGestureProps<Data extends Record<string, [number, number][]>> = {
   points: Data;
   /** The height of the chart. */
   height: number;
-  /** The precision of the y value. */
-  precision: number;
   curveType?: "linear";
   gestureLongPressDelay?: number;
   onPanGestureBegin?: ((payload: PanGestureHandlerOnBeginEventPayload<Data>) => void) | null;
@@ -53,7 +99,6 @@ export type UseGestureProps<Data extends Record<string, [number, number][]>> = {
 export const useGestures = <Data extends Record<string, [number, number][]>>({
   points,
   height,
-  precision,
   curveType = "linear",
   gestureLongPressDelay = 100,
   onPanGestureBegin,
@@ -92,26 +137,40 @@ export const useGestures = <Data extends Record<string, [number, number][]>>({
     .activateAfterLongPress(gestureLongPressDelay)
     .onStart((event) => {
       const pathKeys = Object.keys(paths.value) as (keyof Data)[];
-      const yValues = {} as Record<keyof Data, number>;
+      const yValues = {} as Record<
+        keyof Data,
+        { x: number; y: number; xData: number; yData: number }
+      >;
       for (const key of pathKeys) {
         const path = paths.value[key]!;
-        const rawYValue = getYForX({ path, x: event.x, precision });
-        const { minValue, maxValue } = graphData[key];
-        const yValue = interpolate(rawYValue, [0, height], [maxValue, minValue]);
-        yValues[key] = yValue;
+        const [xValue, yValue, idx] = getClosestPointForX(path, event.x);
+        yValues[key] = {
+          x: xValue,
+          y: yValue,
+          xData: points[key]![idx]![0] ?? 0,
+          yData: points[key]![idx]![1] ?? 0,
+        };
       }
 
       if (onPanGestureBegin) onPanGestureBegin({ event, points: yValues });
     })
     .onChange((event) => {
       const pathKeys = Object.keys(paths.value) as (keyof Data)[];
-      const yValues = {} as Record<keyof Data, number>;
+      const yValues = {} as Record<
+        keyof Data,
+        { x: number; y: number; xData: number; yData: number }
+      >;
       for (const key of pathKeys) {
         const path = paths.value[key]!;
-        const rawYValue = getYForX({ path, x: event.x, precision });
-        const { minValue, maxValue } = graphData[key];
-        const yValue = interpolate(rawYValue, [0, height], [maxValue, minValue]);
-        yValues[key] = yValue;
+        const [xValue, yValue, idx] = getClosestPointForX(path, event.x);
+        // const { minValue, maxValue } = graphData[key];
+        // const yData = round(interpolate(yValue, [0, height], [maxValue, minValue]), precision);
+        yValues[key] = {
+          x: xValue,
+          y: yValue,
+          xData: points[key]![idx]![0] ?? 0,
+          yData: points[key]![idx]![1] ?? 0,
+        };
       }
 
       if (onPanGestureChange) onPanGestureChange({ event, points: yValues });
