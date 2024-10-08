@@ -19,6 +19,9 @@ export default () => {
       <Pressable onPress={() => navigate("/multi_line_chart")}>
         <Text style={styles.link}>Go to multi line chart</Text>
       </Pressable>
+      <Pressable onPress={() => navigate("/single_point_multi_line_chart")}>
+        <Text style={styles.link}>Go to single point multi line chart</Text>
+      </Pressable>
     </ScrollView>
   );
 };

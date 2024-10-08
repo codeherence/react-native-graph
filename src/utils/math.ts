@@ -29,9 +29,24 @@ export const round = (value: number, precision: number = 15): number => {
 const linearYForX = (path: SkPath, x: number): [number, number, number] => {
   "worklet";
   const cmds = path.toCmds();
+  // If there are only 2 commands, the path is a straight line
+  if (cmds.length <= 2) {
+    const cmd = cmds[0];
+    if (cmd === undefined) return [0, 0, 0];
+    if (cmd[0] !== PathVerb.Move) return [0, 0, 0];
+    const x1 = cmd[1];
+    const y1 = cmd[2];
+    if (x1 === undefined || y1 === undefined) return [0, 0, 0];
+    return [x1, y1, 0];
+  }
+
+  // TODO: Optimize this using binary search. Note that the segments on the line chart may not
+  // be equidistant, so a naive binary search may not work that well.
+
   let from: Vector = vec(0, 0);
   let dataIndex = 0;
 
+  // Find the closest x value on the path and return the x, y, and index values
   for (let i = 0; i < cmds.length; ++i) {
     const cmd = cmds[i];
     if (cmd == null) break;
@@ -101,7 +116,7 @@ export const computePath = ({
   const straightLine = Skia.Path.Make()
     .moveTo(0, height / 2)
     .lineTo(width, height / 2);
-  if (points.length === 0) return straightLine; // No data, return a straight line
+  if (points.length <= 1) return straightLine; // No data, return a straight line
 
   const scaleX = scaleTime().domain([minTimestamp, maxTimestamp]).range([0, width]);
   const scaleY = scaleSqrt()
