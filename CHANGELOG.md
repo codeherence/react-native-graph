@@ -1,5 +1,12 @@
 
 
+## [0.4.1](https://github.com/codeherence/react-native-graph/compare/v0.4.0...v0.4.1) (2024-10-08)
+
+
+### Bug Fixes
+
+* add single point handling ([ad33fa6](https://github.com/codeherence/react-native-graph/commit/ad33fa61062d807493d0a4769e594990f94117e0))
+
 ## [0.4.0](https://github.com/codeherence/react-native-graph/compare/v0.3.0...v0.4.0) (2024-10-06)
 
 
