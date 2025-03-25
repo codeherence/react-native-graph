@@ -1,5 +1,12 @@
 
 
+## [0.4.2](https://github.com/codeherence/react-native-graph/compare/v0.4.1...v0.4.2) (2025-03-25)
+
+
+### Bug Fixes
+
+* max min point normalization for multiline ([e212605](https://github.com/codeherence/react-native-graph/commit/e212605b7743bfc1595b03425fd41e4330e7f591))
+
 ## [0.4.1](https://github.com/codeherence/react-native-graph/compare/v0.4.0...v0.4.1) (2024-10-08)
 
 
