@@ -105,7 +105,7 @@ export const useGestures = <Data extends Record<string, [number, number][]>>({
   onPanGestureChange,
   onPanGestureEnd,
 }: UseGestureProps<Data>) => {
-  const { width } = useMultiLineChartContext();
+  const { width, minY, maxY } = useMultiLineChartContext();
 
   const graphData = useMemo(() => {
     return Object.entries(points).reduce(
@@ -122,11 +122,18 @@ export const useGestures = <Data extends Record<string, [number, number][]>>({
     const pathKeys = Object.keys(graphData) as (keyof Data)[];
     for (const key of pathKeys) {
       const value = graphData[key];
-      results[key] = computePath({ ...value, height, width, curveType });
+      results[key] = computePath({
+        ...value,
+        height,
+        width,
+        curveType,
+        minValue: minY, // We use the shared minimum value here since the minimum is shared across all lines
+        maxValue: maxY, // We use the shared maximum value here since the maximum is shared across all lines
+      });
     }
 
     return results;
-  }, [graphData, height, width, curveType]);
+  }, [graphData, height, width, curveType, minY, maxY]);
 
   const paths = useSharedValue<Record<keyof Data, SkPath>>(pathsJS);
   useEffect(() => {

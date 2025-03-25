@@ -16,6 +16,8 @@ interface LineProps extends Pick<PathProps, "children" | "color" | "strokeWidth"
   height?: number;
   strokeWidth?: number;
   curveType?: ComputePathProps["curveType"];
+  minValue?: number;
+  maxValue?: number;
 }
 
 export const Line: React.FC<LineProps> = ({
@@ -24,6 +26,8 @@ export const Line: React.FC<LineProps> = ({
   height = 0,
   strokeWidth = 2,
   curveType = "linear",
+  minValue,
+  maxValue,
   ...pathProps
 }) => {
   const data = useMemo(() => {
@@ -31,7 +35,15 @@ export const Line: React.FC<LineProps> = ({
   }, [points]);
 
   const path = useMemo(() => {
-    return computePath({ ...data, width, height, cursorRadius: 0, curveType });
+    return computePath({
+      ...data,
+      width,
+      height,
+      cursorRadius: 0,
+      curveType,
+      minValue: minValue ?? data.minValue,
+      maxValue: maxValue ?? data.maxValue,
+    });
   }, [data, width, height, curveType]);
 
   return <Path style="stroke" strokeWidth={strokeWidth} color="gray" {...pathProps} path={path} />;

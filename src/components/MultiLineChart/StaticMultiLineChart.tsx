@@ -13,7 +13,7 @@ export const StaticMultiLineChart = <Data extends Record<string, [number, number
   ...viewProps
 }: MultiLineChartProps<Data, true>) => {
   const [layoutComputed, setLayoutComputed] = useState(false);
-  const { height, width, setCanvasSize } = useMultiLineChartContext();
+  const { height, width, minY, maxY, setCanvasSize } = useMultiLineChartContext();
 
   const onLayout = useCallback((e: LayoutChangeEvent) => {
     // Batch the updates to avoid unnecessary re-renders
@@ -44,6 +44,8 @@ export const StaticMultiLineChart = <Data extends Record<string, [number, number
                       ...c.props,
                       width,
                       height,
+                      minValue: minY,
+                      maxValue: maxY,
                     });
                   });
                 }
@@ -52,6 +54,8 @@ export const StaticMultiLineChart = <Data extends Record<string, [number, number
                   ...invokedChildren.props,
                   width,
                   height,
+                  minValue: minY,
+                  maxValue: maxY,
                 });
               })()}
         </Canvas>

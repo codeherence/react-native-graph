@@ -1,10 +1,12 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import { LayoutRectangle } from "react-native";
 
 interface MultiLineChartContextState {
   width: number;
   height: number;
   setCanvasSize: React.Dispatch<React.SetStateAction<LayoutRectangle>>;
+  minY: number;
+  maxY: number;
 }
 
 export const MultiLineChartContext = createContext<MultiLineChartContextState | undefined>(
@@ -12,13 +14,14 @@ export const MultiLineChartContext = createContext<MultiLineChartContextState | 
 );
 
 interface MultiLineChartProviderProps {
+  points: Record<string, [number, number][]>;
   width?: number;
   height?: number;
 }
 
 export const MultiLineChartProvider: React.FC<
   React.PropsWithChildren<MultiLineChartProviderProps>
-> = ({ children }) => {
+> = ({ points, children }) => {
   const [canvasSize, setCanvasSize] = useState<LayoutRectangle>({
     height: 0,
     width: 0,
@@ -26,13 +29,15 @@ export const MultiLineChartProvider: React.FC<
     y: 0,
   });
 
+  const { minY, maxY } = useMemo(() => {
+    const minY = Math.min(...Object.values(points).map((p) => Math.min(...p.map(([, y]) => y))));
+    const maxY = Math.max(...Object.values(points).map((p) => Math.max(...p.map(([, y]) => y))));
+    return { minY, maxY };
+  }, [points]);
+
   return (
     <MultiLineChartContext.Provider
-      value={{
-        width: canvasSize.width,
-        height: canvasSize.height,
-        setCanvasSize,
-      }}
+      value={{ width: canvasSize.width, height: canvasSize.height, setCanvasSize, minY, maxY }}
     >
       {children}
     </MultiLineChartContext.Provider>
