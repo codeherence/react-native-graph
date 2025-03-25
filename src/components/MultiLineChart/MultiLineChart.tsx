@@ -27,7 +27,7 @@ export const MultiLineChart = <
   ...props
 }: MultiLineChartProps<Data, Static>) => {
   return (
-    <MultiLineChartProvider>
+    <MultiLineChartProvider points={props.points}>
       {/* <StaticMultiLineChart {...props} /> */}
       {isStatic ? (
         <StaticMultiLineChart isStatic {...props} />

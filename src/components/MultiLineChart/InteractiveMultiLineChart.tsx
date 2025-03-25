@@ -32,7 +32,7 @@ export const InteractiveMultiLineChart = <Data extends Record<string, [number, n
   ...viewProps
 }: MultiLineChartProps<Data, false>) => {
   const [layoutComputed, setLayoutComputed] = useState(false);
-  const { height, width, setCanvasSize } = useMultiLineChartContext();
+  const { height, width, minY, maxY, setCanvasSize } = useMultiLineChartContext();
 
   const gestures = useGestures({
     points,
@@ -73,6 +73,8 @@ export const InteractiveMultiLineChart = <Data extends Record<string, [number, n
                         ...c.props,
                         width,
                         height,
+                        minValue: minY,
+                        maxValue: maxY,
                       });
                     });
                   }
@@ -81,6 +83,8 @@ export const InteractiveMultiLineChart = <Data extends Record<string, [number, n
                     ...invokedChildren.props,
                     width,
                     height,
+                    minValue: minY,
+                    maxValue: maxY,
                   });
                 })()}
 
