@@ -1,5 +1,13 @@
 
 
+## [0.4.3](https://github.com/codeherence/react-native-graph/compare/v0.4.2...v0.4.3) (2025-11-28)
+
+
+### Bug Fixes
+
+* expo-dev-menu patch for simulator detection ([0212ee0](https://github.com/codeherence/react-native-graph/commit/0212ee0eecc5f72fa6aeecf8596b6cbe44ae15f4))
+* unnecessary path color override ([5a7c1f8](https://github.com/codeherence/react-native-graph/commit/5a7c1f86a8abf0c19daf4d9eb87352adcd97a6e5))
+
 ## [0.4.2](https://github.com/codeherence/react-native-graph/compare/v0.4.1...v0.4.2) (2025-03-25)
 
 
