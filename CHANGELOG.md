@@ -1,5 +1,12 @@
 
 
+## [0.4.4](https://github.com/codeherence/react-native-graph/compare/v0.4.3...v0.4.4) (2025-11-28)
+
+
+### Bug Fixes
+
+* hardcoded path color from library ([42bae25](https://github.com/codeherence/react-native-graph/commit/42bae2507a2ae49cf50c12b00b18e3c262e273b2))
+
 ## [0.4.3](https://github.com/codeherence/react-native-graph/compare/v0.4.2...v0.4.3) (2025-11-28)
 
 
