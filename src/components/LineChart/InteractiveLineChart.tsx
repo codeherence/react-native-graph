@@ -78,7 +78,7 @@ export const InteractiveLineChart: React.FC<LineChartProps<false>> = ({
       <GestureDetector gesture={gestures}>
         <View style={styles.container} onLayout={onLayout}>
           <Canvas style={{ height, width }}>
-            <Path style="stroke" path={path} strokeWidth={strokeWidth} color="white">
+            <Path style="stroke" path={path} strokeWidth={strokeWidth}>
               {PathFill && PathFill({ width, height, strokeWidth })}
             </Path>
             {!hideCursor ? (
