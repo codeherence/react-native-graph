@@ -46,7 +46,7 @@ export const StaticLineChart: React.FC<LineChartProps<true>> = ({
       )}
       <View style={styles.container} onLayout={onLayout}>
         <Canvas style={{ height, width }}>
-          <Path style="stroke" path={path} strokeWidth={strokeWidth}>
+          <Path style="stroke" path={path} strokeWidth={strokeWidth} color="transparent">
             {PathFill && PathFill({ width, height, strokeWidth })}
           </Path>
         </Canvas>
