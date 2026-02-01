@@ -1,5 +1,12 @@
 
 
+## [0.4.5](https://github.com/codeherence/react-native-graph/compare/v0.4.4...v0.4.5) (2026-02-01)
+
+
+### Bug Fixes
+
+* pointer events bug in static charts ([a423e7e](https://github.com/codeherence/react-native-graph/commit/a423e7e32a443035876bfea1199087c794477323))
+
 ## [0.4.4](https://github.com/codeherence/react-native-graph/compare/v0.4.3...v0.4.4) (2025-11-28)
 
 
