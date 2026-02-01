@@ -26,7 +26,7 @@ export const StaticMultiLineChart = <Data extends Record<string, [number, number
 
   return (
     <View style={[styles.root, viewProps.style]} {...viewProps}>
-      <View style={styles.container} onLayout={onLayout}>
+      <View style={styles.container} onLayout={onLayout} pointerEvents="none">
         <Canvas style={{ height, width }}>
           {!layoutComputed
             ? null
