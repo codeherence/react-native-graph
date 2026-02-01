@@ -44,7 +44,7 @@ export const StaticLineChart: React.FC<LineChartProps<true>> = ({
           <TopAxisLabel value={data.maxValue} />
         </AxisLabelContainer>
       )}
-      <View style={styles.container} onLayout={onLayout}>
+      <View style={styles.container} onLayout={onLayout} pointerEvents="none">
         <Canvas style={{ height, width }}>
           <Path style="stroke" path={path} strokeWidth={strokeWidth} color="transparent">
             {PathFill && PathFill({ width, height, strokeWidth })}
